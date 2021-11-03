@@ -30,8 +30,8 @@ app.component("todo_item", {
     };
   },
   template: `
-  <li v-on:mouseover="visible = true" v-on:mouseleave="visible = false" class="todo_item">
-  <div  class="col">
+  <li v-on:mouseover="visible = true" v-on:mouseleave="visible = false" class="row todo_item">
+  <div class="col-auto">
     <input type="checkbox" class="item_check" v-model="checked" />
   </div>            
     <div  class="col-5 item_text" v-bind:class={check:checked}> {{ todo }} </div>
