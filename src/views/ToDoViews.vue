@@ -14,12 +14,14 @@
     <v-row>
       <v-col>
         <v-sheet elevation="1" rounded>
-          <ul class="todo__list  px-3">
+          <ul class="todo__list px-3">
             <to-do-item
               v-for="(item, index) in taskList"
-              v-bind:task="item"
+              v-bind:task="item.task"
+              :selected="item.select"
+              @changeSelect="selectTask"
               v-bind:index="index"
-              v-bind:key="index"
+              v-bind:key="index*2"
               @delete="deleteTask"
             >
             </to-do-item>
@@ -47,13 +49,17 @@ export default {
     addTask() {
       let item = this.task;
       if (item != "") {
-        this.taskList.push(item);
+        this.taskList.push({ task: item, select: false });
         this.task = "";
       }
     },
     deleteTask(index) {
+      delete this.taskList[index]
       this.taskList.splice(index, 1);
     },
+    selectTask(index, inSelect) {
+      this.taskList[index].select = inSelect
+    }
   },
 };
 </script>

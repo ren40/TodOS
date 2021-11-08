@@ -5,26 +5,23 @@
       @mouseleave="visible = false"
       class="d-flex justify-space-between align-center"
     >
-      <v-checkbox 
-      class="todo__item__checkbox"
-      v-model="selected"
-      color="red"
+      <v-checkbox
+        class="todo__item__checkbox"
+        v-model="localSelected"
+        color="red"
+        @click="$emit('changeSelect', index, localSelected)"
       >
-        <template 
-        v-slot:label
-        >
-          <span
-          class="checkbox__label"
-          :class="{ select: selected }"
-          >{{ task }}
+        <template v-slot:label>
+          <span class="checkbox__label" :class="{ select: localSelected }"
+            >{{ task }}
           </span>
         </template>
       </v-checkbox>
-      <v-btn 
-      class="todo__item__delete"
-      :class="{ visible: !visible }" 
-      text 
-      @click="$emit('delete', index)"
+      <v-btn
+        class="todo__item__delete"
+        :class="{ visible: !visible }"
+        text
+        @click="$emit('delete', index)"
       >
         <v-icon>
           {{ icons.mdiDelete }}
@@ -41,14 +38,26 @@ import { mdiDelete } from "@mdi/js";
 
 export default {
   name: "ToDoItem",
-  props: ["task", "index"],
+  props: ["task", "index", "selected"],
   data: () => ({
-    selected: false,
+    localSelected: null,
     visible: false,
     icons: {
       mdiDelete,
     },
   }),
+  mounted() {
+    this.localSelected = this.selected;
+  },
+  beforeUpdate() {
+    this.localSelected = this.selected;
+  },
+  updated() {
+    this.localSelected = this.selected;
+  },
+  destroyed() {
+    this.localSelected = false;
+  },
 };
 </script>
 
