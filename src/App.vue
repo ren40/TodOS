@@ -1,6 +1,8 @@
 <template>
   <v-app>
-    <to-do></to-do>
+    <v-main>
+      <to-do></to-do>
+    </v-main>
   </v-app>
 </template>
 
