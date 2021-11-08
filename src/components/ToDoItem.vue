@@ -52,12 +52,6 @@ export default {
   beforeUpdate() {
     this.localSelected = this.selected;
   },
-  updated() {
-    this.localSelected = this.selected;
-  },
-  destroyed() {
-    this.localSelected = false;
-  },
 };
 </script>
 
