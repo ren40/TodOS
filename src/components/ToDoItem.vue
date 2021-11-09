@@ -19,8 +19,8 @@
       </v-checkbox>
       <v-btn
         class="todo__item__delete"
-        :class="{ visible: !visible }"
         text
+        :class="{ visible: !visible }"
         @click="$emit('delete', index)"
       >
         <v-icon>
@@ -40,16 +40,13 @@ export default {
   name: "ToDoItem",
   props: ["task", "index", "selected"],
   data: () => ({
-    localSelected: null,
+    localSelected: false,
     visible: false,
     icons: {
       mdiDelete,
     },
   }),
   mounted() {
-    this.localSelected = this.selected;
-  },
-  beforeUpdate() {
     this.localSelected = this.selected;
   },
 };

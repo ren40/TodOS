@@ -15,16 +15,17 @@
       <v-col>
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
-            <to-do-item
+            <li 
+              is="to-do-item"
               v-for="(item, index) in taskList"
-              v-bind:task="item.task"
+              :task="item.task"
               :selected="item.select"
-              @changeSelect="selectTask"
-              v-bind:index="index"
-              v-bind:key="index*2"
+              :index="index"
+              :key="item.id"
               @delete="deleteTask"
+              @changeSelect="selectTask"
             >
-            </to-do-item>
+            </li>
           </ul>
         </v-sheet>
       </v-col>
@@ -49,17 +50,17 @@ export default {
     addTask() {
       let item = this.task;
       if (item != "") {
-        this.taskList.push({ task: item, select: false });
+        let id = this.taskList.length * 24
+        this.taskList.push({ id:id, task: item, select: false });
         this.task = "";
       }
     },
     deleteTask(index) {
-      delete this.taskList[index]
-      this.taskList.splice(index, 1);
+      this.taskList.splice(index, 1)
     },
     selectTask(index, inSelect) {
-      this.taskList[index].select = inSelect
-    }
+      this.taskList[index].select = inSelect;
+    },
   },
 };
 </script>
