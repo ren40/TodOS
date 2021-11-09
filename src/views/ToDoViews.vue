@@ -49,9 +49,23 @@ export default {
     addTask() {
       let item = this.task;
       if (item != "") {
-        let id = this.taskList.length * 24 * item.length;
-        this.taskList.push({ id: id, task: item, select: false });
-        this.task = "";
+        try {
+          let id = this.taskList.length * 24 * item.length;
+          let newTask = {
+            id: id,
+            task: {
+              title: item,
+            },
+            complete: false,
+          };
+          this.$http
+            .post("/list", newTask)
+            .then((res) => res);
+            this.taskList.push(newTask);
+            this.task = "";
+        } catch (ex) {
+          console.log(ex);
+        }
       }
     },
     deleteTask(index) {
