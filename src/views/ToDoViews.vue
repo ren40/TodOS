@@ -15,7 +15,7 @@
       <v-col>
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
-            <li 
+            <li
               is="to-do-item"
               v-for="(item, index) in taskList"
               :task="item.task"
@@ -24,8 +24,7 @@
               :key="item.id"
               @delete="deleteTask"
               @changeSelect="selectTask"
-            >
-            </li>
+            ></li>
           </ul>
         </v-sheet>
       </v-col>
@@ -50,13 +49,13 @@ export default {
     addTask() {
       let item = this.task;
       if (item != "") {
-        let id = this.taskList.length * 24
-        this.taskList.push({ id:id, task: item, select: false });
+        let id = this.taskList.length * 24 * item.length;
+        this.taskList.push({ id: id, task: item, select: false });
         this.task = "";
       }
     },
     deleteTask(index) {
-      this.taskList.splice(index, 1)
+      this.taskList.splice(index, 1);
     },
     selectTask(index, inSelect) {
       this.taskList[index].select = inSelect;
