@@ -1,10 +1,17 @@
-import Vue from 'vue'
-import App from './App.vue'
-import vuetify from './plugins/vuetify'
+import Vue from "vue";
+import App from "./App.vue";
+import vuetify from "./plugins/vuetify";
+import http from "./plugins/axios";
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
-new Vue({
+const axios = http()
+
+Vue.prototype.$http = axios;
+
+const app = new Vue({
   vuetify,
-  render: h => h(App)
-}).$mount('#app')
+  render: (h) => h(App),
+});
+
+app.$mount("#app");

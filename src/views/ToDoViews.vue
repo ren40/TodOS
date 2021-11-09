@@ -61,6 +61,9 @@ export default {
       this.taskList[index].select = inSelect;
     },
   },
+  mounted() {
+    console.log(this.$http.get('/list'))
+  },
 };
 </script>
 
