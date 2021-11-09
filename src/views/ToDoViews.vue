@@ -61,8 +61,16 @@ export default {
       this.taskList[index].select = inSelect;
     },
   },
-  mounted() {
-    console.log(this.$http.get('/list'))
+  async mounted() {
+    await this.$http.get("/list").then((response) => {
+      Array(...response.data).forEach((x) =>
+        this.taskList.push({
+          id: x.id,
+          task: x.task["title"],
+          select: x.complete,
+        })
+      );
+    });
   },
 };
 </script>
