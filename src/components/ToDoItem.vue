@@ -13,7 +13,7 @@
       >
         <template v-slot:label>
           <span class="checkbox__label" :class="{ select: localSelected }"
-            >{{ task }}
+            >{{ task["title"] }}
           </span>
         </template>
       </v-checkbox>

@@ -8,13 +8,6 @@
       }
     },
     {
-      "id": 1231432,
-      "complete": false,
-      "task": {
-        "title": "Hello Vue JS"
-      }
-    },
-    {
       "id": 3479873,
       "complete": true,
       "task": {
@@ -22,23 +15,9 @@
       }
     },
     {
-      "id": 2,
-      "complete": false,
+      "id": 480,
       "task": {
-        "title": "test post"
-      }
-    },
-    {
-      "id": 960,
-      "task": {
-        "title": "Test post2"
-      },
-      "complete": false
-    },
-    {
-      "id": 840,
-      "task": {
-        "title": "ewqeqwe"
+        "title": "Привет мир"
       },
       "complete": false
     }
