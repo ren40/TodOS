@@ -2,14 +2,14 @@
   "list": [
     {
       "id": 45789374897843790,
-      "complete": false,
+      "complete": true,
       "task": {
         "title": "Hello world"
       }
     },
     {
       "id": 3479873,
-      "complete": true,
+      "complete": false,
       "task": {
         "title": "Hello Axios"
       }
@@ -19,7 +19,7 @@
       "task": {
         "title": "Привет мир"
       },
-      "complete": false
+      "complete": true
     }
   ]
 }
