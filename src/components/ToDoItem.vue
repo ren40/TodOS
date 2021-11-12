@@ -1,6 +1,12 @@
 <template>
-  <div class="todo__item__wrapper">
-    <li
+  <div
+    class="todo__item__wrapper"
+    draggable
+    @dragover.prevent
+    @dragstart="$emit('dragstart', $event, index)"
+    @drop="$emit('drop', $event, index)"
+  >
+    <div
       @mouseover="visible = true"
       @mouseleave="visible = false"
       class="d-flex justify-space-between align-center"
@@ -13,7 +19,7 @@
       >
         <template v-slot:label>
           <span class="checkbox__label" :class="{ select: localSelected }"
-            >{{ task["title"] }}
+            >{{ task.task["title"] }}
           </span>
         </template>
       </v-checkbox>
@@ -28,7 +34,7 @@
         </v-icon>
         Delete
       </v-btn>
-    </li>
+    </div>
     <v-divider></v-divider>
   </div>
 </template>

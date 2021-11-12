@@ -18,12 +18,15 @@
             <li
               is="to-do-item"
               v-for="(item, index) in taskList"
-              :task="item.task"
+              :task="item"
               :selected="item.complete"
               :index="index"
               :key="item.id"
+              @dragover.prevent
               @delete="deleteTask"
               @changeSelect="selectTask"
+              @dragstart="dragStart"
+              @drop="dragFinish"
             ></li>
           </ul>
         </v-sheet>
@@ -57,6 +60,7 @@ export default {
               title: item,
             },
             complete: false,
+            position: Number(this.taskList.length),
           };
           this.$http.post("/list", newTask).then((res) => {
             if (res.status === 201) {
@@ -109,6 +113,41 @@ export default {
         alert(ex);
       }
     },
+    updatePositionTask(index, position) {
+      try {
+        let taskID = this.taskList[index].id;
+        this.$http
+          .patch(`/list/${taskID}`, {
+            position: position,
+          })
+          .then((res) => {
+            if (res.status !== 200) {
+              throw new Error(
+                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
+              );
+            }
+          });
+      } catch (ex) {
+        alert(ex);
+      }
+    },
+    dragStart(event, index) {
+      event.dataTransfer.setData("Text", index);
+
+      event.dataTransfer.dropEffect = "move";
+    },
+    dragFinish(event, newIndex) {
+      let fromIndex = event.dataTransfer.getData("Text");
+      this.updatePositionTask(fromIndex, newIndex)
+      this.updatePositionTask(newIndex, fromIndex)
+      this.taskList.splice(
+        newIndex,
+        0,
+        this.taskList.splice(fromIndex, 1)[0]
+      );
+      event.dataTransfer.clearData();
+      // this.updateListTask();
+    },
   },
   async mounted() {
     await this.$http.get("/list").then((response) => {
@@ -116,9 +155,19 @@ export default {
         this.taskList.push({
           id: x.id,
           task: x.task,
+          position: x.position,
           complete: x.complete,
         })
       );
+    });
+    this.taskList.sort((next, prev) => {
+      if (next.position > prev.position) {
+        return 1;
+      }
+      if (next.position < prev.position) {
+        return -1;
+      }
+      return 0;
     });
   },
 };
