@@ -113,9 +113,9 @@ export default {
         alert(ex);
       }
     },
-    updatePositionTask(index, position) {
+    updatePositionTask(id, position) {
       try {
-        let taskID = this.taskList[index].id;
+        let taskID = id;
         this.$http
           .patch(`/list/${taskID}`, {
             position: position,
@@ -138,15 +138,9 @@ export default {
     },
     dragFinish(event, newIndex) {
       let fromIndex = event.dataTransfer.getData("Text");
-      this.updatePositionTask(fromIndex, newIndex)
-      this.updatePositionTask(newIndex, fromIndex)
-      this.taskList.splice(
-        newIndex,
-        0,
-        this.taskList.splice(fromIndex, 1)[0]
-      );
+      this.taskList.splice(newIndex, 0, this.taskList.splice(fromIndex, 1)[0]);
+      this.taskList.forEach((item, indx) => this.updatePositionTask(item.id, indx))
       event.dataTransfer.clearData();
-      // this.updateListTask();
     },
   },
   async mounted() {
