@@ -1,0 +1,24 @@
+{
+  "name": "todos",
+  "version": "0.0.1",
+  "description": "todo list",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd ./packages/client && npm run serve",
+    "backend": "cd ./packages/server && nodemon server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ren40/TodOS.git"
+  },
+  "author": "ren40",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ren40/TodOS/issues"
+  },
+  "homepage": "https://github.com/ren40/TodOS#readme",
+  "dependencies": {
+    "lerna": "^4.0.0"
+  }
+}
