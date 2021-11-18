@@ -6,6 +6,7 @@
   "scripts": {
     "client": "cd ./packages/client && npm run serve",
     "backend": "cd ./packages/server && nodemon server.js",
+    "start" : "lerna run start --stream",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
