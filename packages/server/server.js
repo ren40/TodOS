@@ -1,11 +1,13 @@
+const config = require("./config/conf")();
 const express = require("express");
+const router = require('./routes/index')
+
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("Hello world")
-});
+console.log(config)
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.use('/hello', router)
+
+app.listen(config.getPort(), () => {
+  console.log(`Server is running on port ${config.getPort()}`);
 });
