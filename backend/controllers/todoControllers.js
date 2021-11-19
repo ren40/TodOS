@@ -23,9 +23,25 @@ const createNewTask = (req, res) => {
   if (!req.body) {
     return res.sendStatus(400);
   }
-//TODO написать парсер json 
-  const task = new taskModel({});
-  task.save();
+
+  const _task = req.body.task;
+  const _complete = req.body.complete;
+  const _position = req.body.position;
+
+  const task = new taskModel({
+    task: _task,
+    complete: _complete,
+    position: _position,
+  });
+
+  task
+    .save(task)
+    .then((data) => {
+      res.status(201).json(data);
+    })
+    .catch((err) => {
+      res.sendStatus(500);
+    });
 };
 
 const deleteTask = (req, res) => {
@@ -50,7 +66,9 @@ const updateTask = (req, res) => {
   });
 };
 
-const updatePositionTask = (req, res) => {};
+const updatePositionTask = (req, res) => {
+    
+};
 
 module.exports = {
   getAllTask,

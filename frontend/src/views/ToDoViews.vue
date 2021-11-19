@@ -62,9 +62,14 @@ export default {
             complete: false,
             position: Number(this.taskList.length),
           };
-          this.$http.post("/list", newTask).then((res) => {
+          this.$http.post("/task", newTask).then((res) => {
             if (res.status === 201) {
-              this.taskList.push(newTask);
+              this.taskList.push({
+                id: res.data._id,
+                task: res.data.task,
+                position: res.data.position,
+                complete: res.data.complete,
+              });
             } else {
               throw new Error(
                 `Ошибка, таск не добавлен. Код ошибки ${res.status}`
@@ -80,7 +85,7 @@ export default {
     deleteTask(index) {
       try {
         let taskID = this.taskList[index].id;
-        this.$http.delete(`/list/${taskID}`).then((res) => {
+        this.$http.delete(`/task/${taskID}`).then((res) => {
           if (res.status === 200) {
             this.taskList.splice(index, 1);
           } else {
@@ -97,7 +102,7 @@ export default {
       try {
         let taskID = this.taskList[index].id;
         this.$http
-          .patch(`/list/${taskID}`, {
+          .patch(`/task/${taskID}`, {
             complete: inSelect,
           })
           .then((res) => {
@@ -117,7 +122,7 @@ export default {
       try {
         let taskID = id;
         this.$http
-          .patch(`/list/${taskID}`, {
+          .patch(`/task/${taskID}`, {
             position: position,
           })
           .then((res) => {
@@ -139,15 +144,17 @@ export default {
     dragFinish(event, newIndex) {
       let fromIndex = event.dataTransfer.getData("Text");
       this.taskList.splice(newIndex, 0, this.taskList.splice(fromIndex, 1)[0]);
-      this.taskList.forEach((item, indx) => this.updatePositionTask(item.id, indx))
+      this.taskList.forEach((item, indx) =>
+        this.updatePositionTask(item.id, indx)
+      );
       event.dataTransfer.clearData();
     },
   },
   async mounted() {
-    await this.$http.get("/list").then((response) => {
+    await this.$http.get("/tasks").then((response) => {
       Array(...response.data).forEach((x) =>
         this.taskList.push({
-          id: x.id,
+          id: x._id,
           task: x.task,
           position: x.position,
           complete: x.complete,
