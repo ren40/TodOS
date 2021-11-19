@@ -122,7 +122,8 @@ export default {
       try {
         let taskID = id;
         this.$http
-          .patch(`/task/${taskID}`, {
+          .patch(`/task/position`, {
+            id: taskID,
             position: position,
           })
           .then((res) => {
@@ -131,9 +132,10 @@ export default {
                 `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
               );
             }
+            return true;
           });
       } catch (ex) {
-        alert(ex);
+        console.log(ex);
       }
     },
     dragStart(event, index) {
@@ -143,10 +145,14 @@ export default {
     },
     dragFinish(event, newIndex) {
       let fromIndex = event.dataTransfer.getData("Text");
+
+      this.updatePositionTask(this.taskList[fromIndex].id, {
+        fromIndex: parseInt(fromIndex),
+        newPosition: newIndex,
+      });
+      
       this.taskList.splice(newIndex, 0, this.taskList.splice(fromIndex, 1)[0]);
-      this.taskList.forEach((item, indx) =>
-        this.updatePositionTask(item.id, indx)
-      );
+
       event.dataTransfer.clearData();
     },
   },

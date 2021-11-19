@@ -67,7 +67,26 @@ const updateTask = (req, res) => {
 };
 
 const updatePositionTask = (req, res) => {
-    
+  if (!req.body) {
+    return res.sendStatus(400);
+  }
+  const newPosition = req.body.position.newPosition;
+  const id = req.body.id;
+  taskModel
+    .updateMany({ position: { $gte: newPosition } }, { $inc: { position: 1 } })
+    .then((data) => {
+      taskModel
+        .findByIdAndUpdate(id, { position: newPosition })
+        .then((data) => {
+          res.sendStatus(200);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 module.exports = {

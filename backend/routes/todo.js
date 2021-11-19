@@ -10,8 +10,8 @@ router.get("/", function (req, res) {
 router.get("/tasks", todoController.getAllTask);
 router.get("/task/:id", todoController.getTask);
 router.post("/task", jsonParser, todoController.createNewTask);
-router.patch("/task/:id", jsonParser, todoController.updateTask);
 router.patch("/task/position", jsonParser, todoController.updatePositionTask);
+router.patch("/task/:id", jsonParser, todoController.updateTask);
 router.delete("/task/:id", todoController.deleteTask);
 
 module.exports = router;
