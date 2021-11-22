@@ -144,14 +144,14 @@ export default {
       event.dataTransfer.dropEffect = "move";
     },
     dragFinish(event, newIndex) {
-      let fromIndex = event.dataTransfer.getData("Text");
-
-      this.updatePositionTask(this.taskList[fromIndex].id, {
-        fromIndex: parseInt(fromIndex),
+      let _fromIndex = parseInt(event.dataTransfer.getData("Text"));
+      console.log(_fromIndex)
+      this.updatePositionTask(this.taskList[_fromIndex].id, {
+        fromIndex: _fromIndex,
         newPosition: newIndex,
       });
       
-      this.taskList.splice(newIndex, 0, this.taskList.splice(fromIndex, 1)[0]);
+      this.taskList.splice(newIndex, 0, this.taskList.splice(_fromIndex, 1)[0]);
 
       event.dataTransfer.clearData();
     },

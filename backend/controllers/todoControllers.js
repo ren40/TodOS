@@ -72,21 +72,35 @@ const updatePositionTask = (req, res) => {
   }
   const newPosition = req.body.position.newPosition;
   const id = req.body.id;
+
   taskModel
-    .updateMany({ position: { $gte: newPosition } }, { $inc: { position: 1 } })
+    .findByIdAndUpdate(id, { position: newPosition })
     .then((data) => {
-      taskModel
-        .findByIdAndUpdate(id, { position: newPosition })
-        .then((data) => {
-          res.sendStatus(200);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      res.sendStatus(200);
     })
     .catch((err) => {
       console.log(err);
     });
+
+  if (newPosition >= req.body.position.fromIndex) {
+    taskModel
+      .updateMany(
+        { _id: { $ne: id }, position: { $lte: newPosition } },
+        { $inc: { position: -1 } }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  } else if (newPosition <= req.body.position.fromIndex) {
+    taskModel
+      .updateMany(
+        { _id: { $ne: id }, position: { $gte: newPosition } },
+        { $inc: { position: 1 } }
+      )
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 };
 
 module.exports = {
