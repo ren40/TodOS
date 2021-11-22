@@ -3,13 +3,13 @@ const mongoose = require("mongoose");
 const schema = mongoose.Schema;
 
 const taskSchema = new schema({
-//   _id: mongoose.Schema.Types.ObjectId,
   complete: Boolean,
-  position : Number,
+  position: Number,
   task: {
     title: String,
   },
-  versionKey: false
+  date_create: { type: Date, default: Date.now },
+  versionKey: false,
 });
 
 module.exports = mongoose.model("Task", taskSchema);
