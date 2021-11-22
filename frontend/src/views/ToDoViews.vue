@@ -145,13 +145,17 @@ export default {
     },
     dragFinish(event, newIndex) {
       let _fromIndex = parseInt(event.dataTransfer.getData("Text"));
-      console.log(_fromIndex)
+
       this.updatePositionTask(this.taskList[_fromIndex].id, {
         fromIndex: _fromIndex,
         newPosition: newIndex,
       });
-      
-      this.taskList.splice(newIndex, 0, this.taskList.splice(_fromIndex, 1)[0]);
+
+      this.taskList[newIndex] = this.taskList.splice(
+        _fromIndex,
+        1,
+        this.taskList[newIndex]
+      )[0];
 
       event.dataTransfer.clearData();
     },
