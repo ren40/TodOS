@@ -13,20 +13,39 @@ const filterTaskList = (req, res) => {
   if (!req.body) {
     return res.sendStatus(400);
   }
-  console.log(new Date(req.body.date_from));
-  console.log(req.body.date_to);
+  let date_from = new Date(req.body.date_from);
+  date_from.setHours(0, 0, 0, 0);
+  let date_to = new Date(req.body.date_to);
+  date_to.setHours(23, 59, 59, 999);
   taskModel
     .find({
       $and: [
-        { date_create: { $gte: new Date(req.body.date_from) } },
-        { date_create: { $lte: new Date(req.body.date_to) } },
+        { date_create: { $gte: date_from.toISOString() } },
+        { date_create: { $lte: date_to.toISOString() } },
       ],
     })
-    .then(list => {
-      res.json(list)
+    .then((list) => {
+      let sortList = [];
+      Array(...list).forEach((element) => {
+        sortList.push({
+          id: element._id,
+          task: element.task,
+          position: element.position,
+          complete: element.complete,
+        });
+      });
+      sortList.sort((next, prev) => {
+        if (next.position > prev.position) {
+          return 1;
+        }
+        if (next.position < prev.position) {
+          return -1;
+        }
+        return 0;
+      });
+      res.json(sortList);
     })
-    .catch(err => res.sendStatus(500));
-
+    .catch((err) => res.sendStatus(500));
 };
 
 const getTask = (req, res) => {
