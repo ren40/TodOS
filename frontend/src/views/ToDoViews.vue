@@ -170,7 +170,7 @@ export default {
           date_from: _date_from ? _date_from : "",
           date_to: _date_to ? _date_to : "",
         };
-        this.$http.patch("/task/filter", filterDate).then((res) => {
+        this.$http.post("/tasks/filter", filterDate).then((res) => {
           if (res.status !== 200) {
             throw new Error(
               `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${res.status}`

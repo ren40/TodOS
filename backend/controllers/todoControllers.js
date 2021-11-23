@@ -9,6 +9,26 @@ const getAllTask = (req, res) => {
   });
 };
 
+const filterTaskList = (req, res) => {
+  if (!req.body) {
+    return res.sendStatus(400);
+  }
+  console.log(new Date(req.body.date_from));
+  console.log(req.body.date_to);
+  taskModel
+    .find({
+      $and: [
+        { date_create: { $gte: new Date(req.body.date_from) } },
+        { date_create: { $lte: new Date(req.body.date_to) } },
+      ],
+    })
+    .then(list => {
+      res.json(list)
+    })
+    .catch(err => res.sendStatus(500));
+
+};
+
 const getTask = (req, res) => {
   const id = req.params.id;
   taskModel.findOne({ _id: id }, (err, task) => {
@@ -99,6 +119,7 @@ const updatePositionTask = (req, res) => {
 };
 
 module.exports = {
+  filterTaskList,
   getAllTask,
   getTask,
   deleteTask,
