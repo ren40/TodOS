@@ -15,6 +15,9 @@
       <v-col>
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
+            <li class="todo__list_nav" v-if="taskList.length > 0">
+              <to-do-filter @filterDate="filterDate"></to-do-filter>
+            </li>
             <li
               is="to-do-item"
               v-for="(item, index) in taskList"
@@ -37,11 +40,13 @@
 
 <script>
 import ToDoItem from "../components/ToDoItem.vue";
+import ToDoFilter from "../components/ToDoFilter.vue";
 
 export default {
   name: "ToDoViews",
   components: {
     ToDoItem,
+    ToDoFilter,
   },
   data: () => ({
     task: "",
@@ -159,6 +164,24 @@ export default {
 
       event.dataTransfer.clearData();
     },
+    filterDate(_date_from, _date_to) {
+      try {
+        const filterDate = {
+          date_from: _date_from ? _date_from : "",
+          date_to: _date_to ? _date_to : "",
+        };
+        this.$http.patch("/task/filter", filterDate).then((res) => {
+          if (res.status !== 200) {
+            throw new Error(
+              `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${res.status}`
+            );
+          }
+          this.taskList = res.data;
+        });
+      } catch (ex) {
+        alert(ex);
+      }
+    },
   },
   async mounted() {
     await this.$http.get("/tasks").then((response) => {
@@ -187,5 +210,8 @@ export default {
 <style>
 h1 {
   font-weight: 500;
+}
+ul {
+  list-style: none;
 }
 </style>
