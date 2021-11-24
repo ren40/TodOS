@@ -15,7 +15,7 @@
       <v-col>
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
-            <li class="todo__list_nav" v-if="taskList.length > 0">
+            <li class="todo__list_nav">
               <to-do-filter @filterDate="filterDate"></to-do-filter>
             </li>
             <li

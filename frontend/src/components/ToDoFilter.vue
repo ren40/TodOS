@@ -32,6 +32,7 @@
             <v-date-picker
               v-model="date_from"
               no-title
+              :max="date_to"
               @input="menu_from = false"
             ></v-date-picker>
           </v-menu>
