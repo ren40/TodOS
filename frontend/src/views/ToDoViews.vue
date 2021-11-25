@@ -16,10 +16,9 @@
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
             <li class="todo__list_nav">
-              <to-do-filter @filterDate="filterDate"></to-do-filter>
+              <ToDoFilter @filterDate="filterDate"></ToDoFilter>
             </li>
-            <li
-              is="to-do-item"
+            <ToDoItem
               v-for="(item, index) in taskList"
               :task="item"
               :selected="item.complete"
@@ -30,7 +29,7 @@
               @changeSelect="selectTask"
               @dragstart="dragStart"
               @drop="dragFinish"
-            ></li>
+            ></ToDoItem>
           </ul>
         </v-sheet>
       </v-col>
