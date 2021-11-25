@@ -74,6 +74,7 @@ export default {
                 task: res.data.task,
                 position: res.data.position,
                 complete: res.data.complete,
+                date_create: res.data.date_create,
               });
             } else {
               throw new Error(
@@ -191,7 +192,7 @@ export default {
           task: x.task,
           position: x.position,
           complete: x.complete,
-          date_create: x.date_create
+          date_create: x.date_create,
         })
       );
     });
