@@ -23,9 +23,10 @@
           </span>
         </template>
       </v-checkbox>
-      <span class="todo__item__info">
-        Date create: {{ task.date_create.substr(0, 10) }}
-      </span>
+        <span class="todo__item__info ml-auto">
+          Date create: {{ task.date_create.substr(0, 10) }} Time:
+          {{ task.date_create.substr(12, 7) }}
+        </span>
       <v-btn
         class="todo__item__delete"
         text
@@ -63,7 +64,6 @@ export default {
 
 <style scoped>
 .todo__item__info {
-  margin-left: 50%;
   font-size: 14px;
   font-weight: 300;
 }
