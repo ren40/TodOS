@@ -191,6 +191,7 @@ export default {
           task: x.task,
           position: x.position,
           complete: x.complete,
+          date_create: x.date_create
         })
       );
     });

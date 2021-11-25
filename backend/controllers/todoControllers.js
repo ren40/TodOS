@@ -32,6 +32,7 @@ const filterTaskList = (req, res) => {
           task: element.task,
           position: element.position,
           complete: element.complete,
+          date_create: element.date_create
         });
       });
       sortList.sort((next, prev) => {

@@ -23,6 +23,9 @@
           </span>
         </template>
       </v-checkbox>
+      <span class="todo__item__info">
+        Date create: {{ task.date_create.substr(0, 10) }}
+      </span>
       <v-btn
         class="todo__item__delete"
         text
@@ -59,6 +62,11 @@ export default {
 </script>
 
 <style scoped>
+.todo__item__info {
+  margin-left: 50%;
+  font-size: 14px;
+  font-weight: 300;
+}
 .todo__item__checkbox:hover {
   color: #f7b7b7;
 }
