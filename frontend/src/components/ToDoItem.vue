@@ -25,7 +25,7 @@
       </v-checkbox>
         <span class="todo__item__info ml-auto">
           Date create: {{ task.date_create.substr(0, 10) }} Time:
-          {{ task.date_create.substr(12, 7) }}
+          {{ formattedTime(task.date_create) }}
         </span>
       <v-btn
         class="todo__item__delete"
@@ -59,6 +59,11 @@ export default {
   mounted() {
     this.localSelected = this.selected;
   },
+  methods:{
+    formattedTime: (time) => {
+      return `${time.match(/(\d+:)/g)[0].replace(":",'')}:${time.match(/(\d+:)/g)[1].replace(":",'')}`
+    }
+  }
 };
 </script>
 
