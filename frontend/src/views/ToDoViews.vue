@@ -16,7 +16,7 @@
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
             <li class="todo__list_nav">
-              <ToDoFilter @filterDate="filterDate"></ToDoFilter>
+              <ToDoFilter ref="filter" @filterDate="filterDate"></ToDoFilter>
             </li>
             <ToDoItem
               v-for="(item, index) in taskList"
@@ -50,6 +50,7 @@ export default {
   data: () => ({
     task: "",
     taskList: [],
+    lastListSize: 0,
     //
   }),
   methods: {
@@ -187,14 +188,23 @@ export default {
         .get("/tasks")
         .then((res) => {
           this.taskList = res.data;
+          this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
           console.log(err);
         });
     },
+    handlerWatchFilter() {
+      this.$watch("$refs.filter.isActive", (new_value) => {
+        if (new_value === false && this.lastListSize != this.taskList.length) {
+          this.handlerGetTaskList();
+        }
+      });
+    },
   },
   mounted() {
     this.handlerGetTaskList();
+    this.handlerWatchFilter();
   },
 };
 </script>
