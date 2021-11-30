@@ -1,134 +1,119 @@
-const taskModel = require('../models/todoSchema')
+const taskModel = require("../models/todoSchema");
+const listUtils = require("../utils/list_utils");
 
 const getAllTask = (req, res) => {
-  taskModel.find((err, tasks) => {
-    if (err) {
-      return console.error(err)
-    }
-    res.json(tasks)
-  })
-}
+  taskModel
+    .find()
+    .then((list) => {
+      res.json(listUtils.sortList(listUtils.formatedList(list)));
+    })
+    .catch((err) => res.sendStatus(500));
+};
 
 const filterTaskList = (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400)
+    return res.sendStatus(400);
   }
-  let date_from = new Date(req.body.date_from)
-  date_from.setHours(0, 0, 0, 0)
-  let date_to = new Date(req.body.date_to)
-  date_to.setHours(23, 59, 59, 999)
+  let date_from = new Date(req.body.date_from);
+  date_from.setHours(0, 0, 0, 0);
+  let date_to = new Date(req.body.date_to);
+  date_to.setHours(23, 59, 59, 999);
   taskModel
     .find({
       $and: [
         { date_create: { $gte: date_from.toISOString() } },
-        { date_create: { $lte: date_to.toISOString() } }
-      ]
+        { date_create: { $lte: date_to.toISOString() } },
+      ],
     })
-    .then(list => {
-      let sortList = []
-      Array(...list).forEach(element => {
-        sortList.push({
-          id: element._id,
-          task: element.task,
-          position: element.position,
-          complete: element.complete,
-          date_create: element.date_create
-        })
-      })
-      sortList.sort((next, prev) => {
-        if (next.position > prev.position) {
-          return 1
-        }
-        if (next.position < prev.position) {
-          return -1
-        }
-        return 0
-      })
-      res.json(sortList)
+    .then((list) => {
+      res.json(listUtils.sortList(listUtils.formatedList(list)));
     })
-    .catch(err => res.sendStatus(500))
-}
+    .catch((err) => res.sendStatus(500));
+};
 
 const getTask = (req, res) => {
-  const id = req.params.id
-  taskModel.findOne({ _id: id }, (err, task) => {
-    if (err) {
-      return console.error(err)
-    }
-    res.json(task)
-  })
-}
+  const id = req.params.id;
+  taskModel
+    .findOne({ _id: id })
+    .then((task) => res.json(task))
+    .catch((err) => res.sendStatus(500));
+};
 
 const createNewTask = (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400)
+    return res.sendStatus(400);
   }
 
-  const _task = req.body.task
-  const _complete = req.body.complete
-  const _position = req.body.position
+  const _task = req.body.task;
+  const _complete = req.body.complete;
+  const _position = req.body.position;
 
   const task = new taskModel({
     task: _task,
     complete: _complete,
-    position: _position
-  })
+    position: _position,
+  });
 
   task
     .save(task)
-    .then(data => {
-      res.status(201).json(data)
+    .then((data) => {
+      res.status(201).json(data);
     })
-    .catch(err => {
-      res.sendStatus(500)
-    })
-}
+    .catch((err) => {
+      res.sendStatus(500);
+    });
+};
 
 const deleteTask = (req, res) => {
-  const id = req.params.id
-  taskModel.findByIdAndDelete(id, (err, task) => {
-    if (err) {
-      console.error(err)
-    }
-    res.json(task)
-  })
-}
+  const id = req.params.id;
+  taskModel
+    .findByIdAndDelete(id)
+    .then((task) => {
+      res.json(task);
+    })
+    .catch((err) => {
+      res.sendStatus(500);
+    });
+};
 
 const updateTask = (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400)
+    return res.sendStatus(400);
   }
-  const id = req.params.id
-  taskModel.findByIdAndUpdate(id, req.body, (err, task) => {
-    if (err) {
-      console.error(err)
-    }
-  })
-}
+  const id = req.params.id;
+  taskModel
+    .findByIdAndUpdate(id, req.body)
+    .then((task) => {
+      res.sendStatus(200);
+    })
+    .catch((err) => {
+      res.sendStatus(500);
+    });
+};
 
 const updatePositionTask = (req, res) => {
   if (!req.body) {
-    return res.sendStatus(400)
+    return res.sendStatus(400);
   }
-  const newPosition = req.body.position.newPosition
-  const id = req.body.id
+  const newPosition = req.body.position.newPosition;
+  const id = req.body.id;
   taskModel
     .findOne({ position: newPosition })
-    .then(task_old => {
+    .then((task_old) => {
       return taskModel.findByIdAndUpdate(task_old._id, {
-        position: req.body.position.fromIndex
-      })
+        position: req.body.position.fromIndex,
+      });
     })
-    .then(result => {
-      return taskModel.findByIdAndUpdate(id, { position: newPosition })
+    .then((result) => {
+      return taskModel.findByIdAndUpdate(id, { position: newPosition });
     })
-    .then(data => {
-      res.sendStatus(200)
+    .then((data) => {
+      res.sendStatus(200);
     })
-    .catch(err => {
-      console.log(err)
-    })
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
 
 module.exports = {
   filterTaskList,
@@ -137,5 +122,5 @@ module.exports = {
   deleteTask,
   updateTask,
   updatePositionTask,
-  createNewTask
-}
+  createNewTask,
+};
