@@ -56,17 +56,17 @@ export default {
     addTask() {
       let item = this.task;
       if (item != "") {
-        try {
-          let id = this.taskList.length * 24 * item.length;
-          let newTask = {
-            id: id,
-            task: {
-              title: item,
-            },
-            complete: false,
-            position: Number(this.taskList.length),
-          };
-          this.$http.post("/task", newTask).then((res) => {
+        let newTask = {
+          task: {
+            title: item,
+          },
+          complete: false,
+          position: Number(this.taskList.length),
+        };
+
+        this.$http
+          .post("/task", newTask)
+          .then((res) => {
             if (res.status === 201) {
               this.taskList.push({
                 id: res.data._id,
@@ -80,17 +80,18 @@ export default {
                 `Ошибка, таск не добавлен. Код ошибки ${res.status}`
               );
             }
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          this.task = "";
-        } catch (ex) {
-          alert(ex);
-        }
+        this.task = "";
       }
     },
     deleteTask(index) {
-      try {
-        let taskID = this.taskList[index].id;
-        this.$http.delete(`/task/${taskID}`).then((res) => {
+      let taskID = this.taskList[index].id;
+      this.$http
+        .delete(`/task/${taskID}`)
+        .then((res) => {
           if (res.status === 200) {
             this.taskList.splice(index, 1);
           } else {
@@ -98,50 +99,48 @@ export default {
               `Ошибка, не удалось удалить таск, id таска ${taskID}. Код ошибки ${res.status}`
             );
           }
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      } catch (ex) {
-        alert(ex);
-      }
     },
     selectTask(index, inSelect) {
-      try {
-        let taskID = this.taskList[index].id;
-        this.$http
-          .patch(`/task/${taskID}`, {
-            complete: inSelect,
-          })
-          .then((res) => {
-            if (res.status === 200) {
-              this.taskList[index].complete = inSelect;
-            } else {
-              throw new Error(
-                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-              );
-            }
-          });
-      } catch (ex) {
-        alert(ex);
-      }
+      let taskID = this.taskList[index].id;
+      this.$http
+        .patch(`/task/${taskID}`, {
+          complete: inSelect,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            this.taskList[index].complete = inSelect;
+          } else {
+            throw new Error(
+              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
+            );
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     updatePositionTask(id, position) {
-      try {
-        let taskID = id;
-        this.$http
-          .patch(`/task/position`, {
-            id: taskID,
-            position: position,
-          })
-          .then((res) => {
-            if (res.status !== 200) {
-              throw new Error(
-                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-              );
-            }
-            return true;
-          });
-      } catch (ex) {
-        console.log(ex);
-      }
+      let taskID = id;
+      this.$http
+        .patch(`/task/position`, {
+          id: taskID,
+          position: position,
+        })
+        .then((res) => {
+          if (res.status !== 200) {
+            throw new Error(
+              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
+            );
+          }
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     dragStart(event, index) {
       event.dataTransfer.setData("Text", index);
@@ -165,22 +164,23 @@ export default {
       event.dataTransfer.clearData();
     },
     filterDate(_date_from, _date_to) {
-      try {
-        const filterDate = {
-          date_from: _date_from ? _date_from : "",
-          date_to: _date_to ? _date_to : "",
-        };
-        this.$http.post("/tasks/filter", filterDate).then((res) => {
+      const filterDate = {
+        date_from: _date_from ? _date_from : "",
+        date_to: _date_to ? _date_to : "",
+      };
+      this.$http
+        .post("/tasks/filter", filterDate)
+        .then((res) => {
           if (res.status !== 200) {
             throw new Error(
               `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${res.status}`
             );
           }
           this.taskList = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
         });
-      } catch (ex) {
-        alert(ex);
-      }
     },
     handlerGetTaskList() {
       this.$http
