@@ -182,28 +182,19 @@ export default {
         alert(ex);
       }
     },
-  },
-  async mounted() {
-    await this.$http.get("/tasks").then((response) => {
-      Array(...response.data).forEach((x) =>
-        this.taskList.push({
-          id: x._id,
-          task: x.task,
-          position: x.position,
-          complete: x.complete,
-          date_create: x.date_create,
+    handlerGetTaskList() {
+      this.$http
+        .get("/tasks")
+        .then((res) => {
+          this.taskList = res.data;
         })
-      );
-    });
-    this.taskList.sort((next, prev) => {
-      if (next.position > prev.position) {
-        return 1;
-      }
-      if (next.position < prev.position) {
-        return -1;
-      }
-      return 0;
-    });
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
+  mounted() {
+    this.handlerGetTaskList();
   },
 };
 </script>
