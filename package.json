@@ -6,7 +6,7 @@
   "scripts": {
     "client": "cd ./packages/client && npm run serve",
     "backend": "cd ./packages/server && nodemon server.js",
-    "start" : "lerna run start --stream",
+    "start": "lerna run start --stream",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/ren40/TodOS#readme",
   "dependencies": {
-    "lerna": "^4.0.0"
+    "lerna": "^4.0.0",
+    "vue-toastification": "^1.7.14"
   }
 }

@@ -83,7 +83,9 @@ export default {
             }
           })
           .catch((err) => {
-            console.log(err);
+            this.$toast.error(err, {
+              position: "top-right",
+            });
           });
         this.task = "";
       }
@@ -102,7 +104,9 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.$toast.error(err, {
+            position: "top-right",
+          });
         });
     },
     selectTask(index, inSelect) {
@@ -121,7 +125,9 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err);
+          this.$toast.error(err, {
+            position: "top-right",
+          });
         });
     },
     updatePositionTask(id, position) {
@@ -140,7 +146,9 @@ export default {
           return true;
         })
         .catch((err) => {
-          console.log(err);
+          this.$toast.error(err, {
+            position: "top-right",
+          });
         });
     },
     dragStart(event, index) {
@@ -180,7 +188,9 @@ export default {
           this.taskList = res.data;
         })
         .catch((err) => {
-          console.log(err);
+          this.$toast.error(err, {
+            position: "top-right",
+          });
         });
     },
     handlerGetTaskList() {
@@ -191,7 +201,9 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          console.log(err);
+          this.$toast.error(err, {
+            position: "top-right",
+          });
         });
     },
     handlerWatchFilter() {
