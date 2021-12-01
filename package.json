@@ -20,7 +20,6 @@
   },
   "homepage": "https://github.com/ren40/TodOS#readme",
   "dependencies": {
-    "lerna": "^4.0.0",
-    "vue-toastification": "^1.7.14"
+    "lerna": "^4.0.0"
   }
 }
