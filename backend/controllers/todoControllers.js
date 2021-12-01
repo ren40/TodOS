@@ -98,21 +98,30 @@ const updatePositionTask = (req, res) => {
   const newPosition = req.body.position.newPosition;
   const id = req.body.id;
   taskModel
-    .findOne({ position: newPosition })
-    .then((task_old) => {
-      return taskModel.findByIdAndUpdate(task_old._id, {
-        position: req.body.position.fromIndex,
-      });
-    })
-    .then((result) => {
-      return taskModel.findByIdAndUpdate(id, { position: newPosition });
-    })
-    .then((data) => {
-      res.sendStatus(200);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    .bulkWrite([
+      {
+        updateOne: {
+          filter: {
+            position: newPosition,
+          },
+          update: {
+            position: req.body.position.fromIndex,
+          },
+        },
+      },
+      {
+        updateOne: {
+          filter: {
+            _id: id,
+          },
+          update: {
+            position: newPosition,
+          },
+        },
+      },
+    ])
+    .then((result) => res.sendStatus(200))
+    .catch((err) => console.log(err));
 };
 
 module.exports = {
