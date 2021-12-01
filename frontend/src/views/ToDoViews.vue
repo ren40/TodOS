@@ -83,7 +83,7 @@ export default {
             }
           })
           .catch((err) => {
-            this.$toast.error(err, {
+            this.$toast.error(err.message, {
               position: "top-right",
             });
           });
@@ -104,7 +104,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$toast.error(err, {
+          this.$toast.error(err.message, {
             position: "top-right",
           });
         });
@@ -125,7 +125,7 @@ export default {
           }
         })
         .catch((err) => {
-          this.$toast.error(err, {
+          this.$toast.error(err.message, {
             position: "top-right",
           });
         });
@@ -146,7 +146,7 @@ export default {
           return true;
         })
         .catch((err) => {
-          this.$toast.error(err, {
+          this.$toast.error(err.message, {
             position: "top-right",
           });
         });
@@ -188,7 +188,7 @@ export default {
           this.taskList = res.data;
         })
         .catch((err) => {
-          this.$toast.error(err, {
+          this.$toast.error(err.message, {
             position: "top-right",
           });
         });
@@ -201,7 +201,7 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          this.$toast.error(err, {
+          this.$toast.error(err.message, {
             position: "top-right",
           });
         });
