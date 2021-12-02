@@ -76,6 +76,15 @@ const deleteTask = (req, res) => {
     });
 };
 
+const deleteAllTask = (req, res) => {
+  taskModel
+    .deleteMany()
+    .then((task) => res.sendStatus(200))
+    .catch((err) => {
+      res.sendStatus(500);
+    });
+};
+
 const updateTask = (req, res) => {
   if (!req.body) {
     return res.sendStatus(400);
@@ -129,6 +138,7 @@ module.exports = {
   getAllTask,
   getTask,
   deleteTask,
+  deleteAllTask,
   updateTask,
   updatePositionTask,
   createNewTask,
