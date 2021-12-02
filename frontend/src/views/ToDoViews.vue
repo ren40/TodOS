@@ -158,17 +158,18 @@ export default {
     },
     dragFinish(event, newIndex) {
       let _fromIndex = parseInt(event.dataTransfer.getData("Text"));
+      if (this.taskList[_fromIndex].id != null) {
+        this.updatePositionTask(this.taskList[_fromIndex].id, {
+          fromIndex: _fromIndex,
+          newPosition: newIndex,
+        });
 
-      this.updatePositionTask(this.taskList[_fromIndex].id, {
-        fromIndex: _fromIndex,
-        newPosition: newIndex,
-      });
-
-      this.taskList[newIndex] = this.taskList.splice(
-        _fromIndex,
-        1,
-        this.taskList[newIndex]
-      )[0];
+        this.taskList[newIndex] = this.taskList.splice(
+          _fromIndex,
+          1,
+          this.taskList[newIndex]
+        )[0];
+      }
 
       event.dataTransfer.clearData();
     },
