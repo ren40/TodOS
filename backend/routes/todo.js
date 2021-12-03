@@ -13,8 +13,7 @@ router.get("/task/:id", todoController.getTask);
 router.post("/task", jsonParser, todoController.createNewTask);
 router.patch("/task/position", jsonParser, todoController.updatePositionTask);
 router.patch("/task/:id", jsonParser, todoController.updateTask);
-router.delete("/tasks", todoController.deleteAllTask)
+router.delete("/tasks", todoController.deleteAllTasks);
 router.delete("/task/:id", todoController.deleteTask);
-
 
 module.exports = router;

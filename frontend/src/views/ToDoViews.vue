@@ -30,6 +30,9 @@
               @dragstart="dragStart"
               @drop="dragFinish"
             ></ToDoItem>
+            <li class="todo__list_footer" v-if="taskList.length > 5">
+              <ToDoFooter @deleteAll="deleteAllTask"></ToDoFooter>
+            </li>
           </ul>
         </v-sheet>
       </v-col>
@@ -40,12 +43,14 @@
 <script>
 import ToDoItem from "../components/ToDoItem.vue";
 import ToDoFilter from "../components/ToDoFilter.vue";
+import ToDoFooter from "../components/ToDoFooter.vue";
 
 export default {
   name: "ToDoViews",
   components: {
     ToDoItem,
     ToDoFilter,
+    ToDoFooter,
   },
   data: () => ({
     task: "",
@@ -101,6 +106,24 @@ export default {
             throw new Error(
               `Ошибка, не удалось удалить таск, id таска ${taskID}. Код ошибки ${res.status}`
             );
+          }
+        })
+        .catch((err) => {
+          this.$toast.error(err.message, {
+            position: "top-right",
+          });
+        });
+    },
+    deleteAllTask() {
+       this.$http
+        .delete(`/tasks`)
+        .then((res) => {
+          if (res.status != 200) {
+            throw new Error(
+              `Ошибка, не удалось удалить все таски. Код ошибки ${res.status}`
+            );
+          } else {
+            this.handlerGetTaskList();
           }
         })
         .catch((err) => {

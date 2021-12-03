@@ -76,7 +76,7 @@ const deleteTask = (req, res) => {
     });
 };
 
-const deleteAllTask = (req, res) => {
+const deleteAllTasks = (req, res) => {
   taskModel
     .deleteMany()
     .then((task) => res.sendStatus(200))
@@ -138,7 +138,7 @@ module.exports = {
   getAllTask,
   getTask,
   deleteTask,
-  deleteAllTask,
+  deleteAllTasks,
   updateTask,
   updatePositionTask,
   createNewTask,
