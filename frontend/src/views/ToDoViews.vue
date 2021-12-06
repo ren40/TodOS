@@ -30,7 +30,7 @@
               @dragstart="dragStart"
               @drop="dragFinish"
             ></ToDoItem>
-            <li class="todo__list_footer" v-if="taskList.length > 5">
+            <li class="todo__list_footer" v-if="taskList.length > $appConfig.service.LIMIT_ELEMENT">
               <ToDoFooter @deleteAll="deleteAllTask"></ToDoFooter>
             </li>
           </ul>

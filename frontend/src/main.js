@@ -3,6 +3,7 @@ import App from "./App.vue";
 import Toast from "vue-toastification";
 import vuetify from "./plugins/vuetify";
 import http from "./plugins/axios";
+import configPlugin from "./plugins/config";
 import "vue-toastification/dist/index.css";
 
 Vue.config.productionTip = false;
@@ -14,6 +15,8 @@ Vue.use(Toast, {
   maxToasts: 20,
   newestOnTop: true,
 });
+
+Vue.use(configPlugin);
 
 Vue.prototype.$http = axios;
 
