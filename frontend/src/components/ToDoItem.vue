@@ -23,21 +23,29 @@
           </span>
         </template>
       </v-checkbox>
-        <span class="todo__item__info ml-auto">
-          Date create: {{ task.date_create.substr(0, 10) }} Time:
-          {{ formattedTime(task.date_create) }}
-        </span>
+      <span class="todo__item__info ml-auto">
+        Date create: {{ task.date_create.substr(0, 10) }} Time:
+        {{ formattedTime(task.date_create) }}
+      </span>
       <v-btn
         class="todo__item__delete"
         text
         :class="{ visible: !visible }"
-        @click="$emit('delete', index)"
+        @click.stop="deleteDialog = true"
       >
         <v-icon>
           {{ icons.mdiDelete }}
         </v-icon>
         Delete
       </v-btn>
+      <DeleteDialog :dialog="deleteDialog" @delete="deleteTask">
+        <template v-slot:title>
+          <p>Delete this task</p>
+        </template>
+        <template v-slot:description>
+          <p>Are you sure you want to delete this task ?</p>
+        </template>
+      </DeleteDialog>
     </div>
     <v-divider></v-divider>
   </div>
@@ -45,12 +53,17 @@
 
 <script>
 import { mdiDelete } from "@mdi/js";
+import DeleteDialog from "./DeleteDialog.vue";
 
 export default {
   name: "ToDoItem",
   props: ["task", "index", "selected"],
+  components: {
+    DeleteDialog,
+  },
   data: () => ({
     localSelected: false,
+    deleteDialog: false,
     visible: false,
     icons: {
       mdiDelete,
@@ -59,11 +72,19 @@ export default {
   mounted() {
     this.localSelected = this.selected;
   },
-  methods:{
+  methods: {
+    deleteTask(agree) {
+      if(agree) {
+        this.$emit('delete', this.index);
+      }
+      this.deleteDialog = false;
+    },
     formattedTime: (time) => {
-      return `${time.match(/(\d+:)/g)[0].replace(":",'')}:${time.match(/(\d+:)/g)[1].replace(":",'')}`
-    }
-  }
+      return `${time.match(/(\d+:)/g)[0].replace(":", "")}:${time
+        .match(/(\d+:)/g)[1]
+        .replace(":", "")}`;
+    },
+  },
 };
 </script>
 

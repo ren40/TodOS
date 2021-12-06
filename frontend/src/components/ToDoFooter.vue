@@ -9,10 +9,14 @@
           </v-icon>
           Delete All
         </v-btn>
-        <DeleteDialog
-          :dialog="deleteDialog"
-          @delete="deleteAllTask"
-        ></DeleteDialog>
+        <DeleteDialog :dialog="deleteDialog" @delete="deleteAllTask"
+          ><template v-slot:title>
+            <p>Delete all tasks</p>
+          </template>
+          <template v-slot:description>
+            <p>Are you sure you want to delete everything?</p>
+          </template></DeleteDialog
+        >
       </div>
     </v-container>
   </div>

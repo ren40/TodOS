@@ -2,11 +2,11 @@
   <v-dialog v-model="dialog" max-width="290" @click:outside="$emit('delete', false)">
     <v-card>
       <v-card-title class="text-h5">
-       Delete all tasks
+      <slot name="title"></slot>
       </v-card-title>
 
       <v-card-text>
-        Are you sure you want to delete everything?
+        <slot name="description"></slot>
       </v-card-text>
 
       <v-card-actions>
