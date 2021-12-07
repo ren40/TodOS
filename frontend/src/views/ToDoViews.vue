@@ -30,7 +30,10 @@
               @dragstart="dragStart"
               @drop="dragFinish"
             ></ToDoItem>
-            <li class="todo__list_footer" v-if="taskList.length > $appConfig.service.LIMIT_ELEMENT">
+            <li
+              class="todo__list_footer"
+              v-if="taskList.length > $appConfig.service.LIMIT_ELEMENT"
+            >
               <ToDoFooter @deleteAll="deleteAllTask"></ToDoFooter>
             </li>
           </ul>
@@ -73,24 +76,27 @@ export default {
         this.$http
           .post("/task", newTask)
           .then((res) => {
-            if (res.status === 201) {
-              this.taskList.push({
-                id: res.data._id,
-                task: res.data.task,
-                position: res.data.position,
-                complete: res.data.complete,
-                date_create: res.data.date_create,
-              });
-            } else {
-              throw new Error(
-                `Ошибка, таск не добавлен. Код ошибки ${res.status}`
-              );
+            switch (res.status) {
+              case 200:
+              case 201:
+                this.taskList.push({
+                  id: res.data._id,
+                  task: res.data.task,
+                  position: res.data.position,
+                  complete: res.data.complete,
+                  date_create: res.data.date_create,
+                });
+                this.handlerMessage(1, "Таск успешно добавлен");
+                break;
+              default:
+                this.handlerMessage(
+                  3,
+                  `Ошибка, таск не добавлен. Код ошибки ${res.status}`
+                );
             }
           })
           .catch((err) => {
-            this.$toast.error(err.message, {
-              position: "top-right",
-            });
+            throw err.message;
           });
         this.task = "";
       }
@@ -100,30 +106,39 @@ export default {
       this.$http
         .delete(`/task/${taskID}`)
         .then((res) => {
-          if (res.status === 200) {
-            this.taskList.splice(index, 1);
-          } else {
-            throw new Error(
-              `Ошибка, не удалось удалить таск, id таска ${taskID}. Код ошибки ${res.status}`
-            );
+          switch (res.status) {
+            case 200:
+            case 201:
+              this.taskList.splice(index, 1);
+              this.handlerMessage(1, "Таск удален");
+              break;
+            default:
+              this.handlerMessage(
+                3,
+                `Ошибка, не удалось удалить таск, id таска ${taskID}. 
+                Код ошибки ${res.status}`
+              );
           }
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          throw err.message;
         });
     },
     deleteAllTask() {
-       this.$http
+      this.$http
         .delete(`/tasks`)
         .then((res) => {
-          if (res.status != 200) {
-            throw new Error(
-              `Ошибка, не удалось удалить все таски. Код ошибки ${res.status}`
-            );
-          } else {
-            this.handlerGetTaskList();
+          switch (res.status) {
+            case 200:
+            case 201:
+              this.handlerGetTaskList();
+              this.handlerMessage(1, "Удалены все таски");
+              break;
+            default:
+              this.handlerMessage(
+                3,
+                `Ошибка, не удалось удалить все таски. Код ошибки ${res.status}`
+              );
           }
         })
         .catch((err) => {
@@ -139,18 +154,21 @@ export default {
           complete: inSelect,
         })
         .then((res) => {
-          if (res.status === 200) {
-            this.taskList[index].complete = inSelect;
-          } else {
-            throw new Error(
-              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-            );
+          switch (res.status) {
+            case 200:
+            case 201:
+              this.taskList[index].complete = inSelect;
+              this.handlerMessage(1, "Таск успешно изменен");
+              break;
+            default:
+              this.handlerMessage(
+                3,
+                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
+              );
           }
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          throw err.message;
         });
     },
     updatePositionTask(id, position) {
@@ -161,17 +179,20 @@ export default {
           position: position,
         })
         .then((res) => {
-          if (res.status !== 200) {
-            throw new Error(
-              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-            );
+          switch (res.status) {
+            case 200:
+            case 201:
+              this.handlerMessage(1, "Успешно изменено позиция таска")
+              break;
+            default:
+              this.handlerMessage(
+                3,
+                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
+              );
           }
-          return true;
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          throw err.message;
         });
     },
     dragStart(event, index) {
@@ -212,9 +233,7 @@ export default {
           this.taskList = res.data;
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          throw err.message;
         });
     },
     handlerGetTaskList() {
@@ -225,9 +244,7 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          throw err.message;
         });
     },
     handlerWatchFilter() {
@@ -236,6 +253,34 @@ export default {
           this.handlerGetTaskList();
         }
       });
+    },
+    handlerMessage(mode, msg) {
+      switch (mode) {
+        case 0:
+          this.$toast.info(msg, {
+            position: "top-right",
+          });
+          break;
+        case 1:
+          this.$toast.success(msg, {
+            position: "top-right",
+          });
+          break;
+        case 2:
+          this.$toast.warning(msg, {
+            position: "top-right",
+          });
+          break;
+        case 3:
+          this.$toast.error(msg, {
+            position: "top-right",
+          });
+          break;
+        default:
+          this.$toast(msg, {
+            position: "top-right",
+          });
+      }
     },
   },
   mounted() {
