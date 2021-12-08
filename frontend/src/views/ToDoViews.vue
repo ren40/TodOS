@@ -76,27 +76,32 @@ export default {
         this.$http
           .post("/task", newTask)
           .then((res) => {
-            switch (res.status) {
-              case 200:
-              case 201:
-                this.taskList.push({
-                  id: res.data._id,
-                  task: res.data.task,
-                  position: res.data.position,
-                  complete: res.data.complete,
-                  date_create: res.data.date_create,
-                });
-                this.handlerMessage(1, "Таск успешно добавлен");
-                break;
-              default:
-                this.handlerMessage(
-                  3,
-                  `Ошибка, таск не добавлен. Код ошибки ${res.status}`
-                );
-            }
+            this.taskList.push({
+              id: res.data._id,
+              task: res.data.task,
+              position: res.data.position,
+              complete: res.data.complete,
+              date_create: res.data.date_create,
+            });
+            this.handlerMessage(
+              this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+              "Таск успешно добавлен"
+            );
           })
           .catch((err) => {
-            throw err.message;
+            let mode = this.parseHttpStatus(
+              err.toString().replace(/[^0-9]/g, "")
+            );
+            if (mode === 4 || mode === 5) {
+              this.handlerMessage(
+                3,
+                `Ошибка, таск не добавлен. Код ошибки ${err
+                  .toString()
+                  .replace(/[^0-9]/g, "")}`
+              );
+            } else {
+              throw err.message;
+            }
           });
         this.task = "";
       }
@@ -106,45 +111,51 @@ export default {
       this.$http
         .delete(`/task/${taskID}`)
         .then((res) => {
-          switch (res.status) {
-            case 200:
-            case 201:
-              this.taskList.splice(index, 1);
-              this.handlerMessage(1, "Таск удален");
-              break;
-            default:
-              this.handlerMessage(
-                3,
-                `Ошибка, не удалось удалить таск, id таска ${taskID}. 
-                Код ошибки ${res.status}`
-              );
-          }
+          this.taskList.splice(index, 1);
+          this.handlerMessage(
+            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+            "Таск удален"
+          );
         })
         .catch((err) => {
-          throw err.message;
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не удалось удалить таск, id таска ${taskID}. 
+                Код ошибки ${err.toString().replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     deleteAllTask() {
       this.$http
         .delete(`/tasks`)
         .then((res) => {
-          switch (res.status) {
-            case 200:
-            case 201:
-              this.handlerGetTaskList();
-              this.handlerMessage(1, "Удалены все таски");
-              break;
-            default:
-              this.handlerMessage(
-                3,
-                `Ошибка, не удалось удалить все таски. Код ошибки ${res.status}`
-              );
-          }
+          this.handlerGetTaskList();
+          this.handlerMessage(
+            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+            "Удалены все таски"
+          );
         })
         .catch((err) => {
-          this.$toast.error(err.message, {
-            position: "top-right",
-          });
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не удалось удалить все таски. Код ошибки ${err
+                .toString()
+                .replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     selectTask(index, inSelect) {
@@ -154,21 +165,26 @@ export default {
           complete: inSelect,
         })
         .then((res) => {
-          switch (res.status) {
-            case 200:
-            case 201:
-              this.taskList[index].complete = inSelect;
-              this.handlerMessage(1, "Таск успешно изменен");
-              break;
-            default:
-              this.handlerMessage(
-                3,
-                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-              );
-          }
+          this.taskList[index].complete = inSelect;
+          this.handlerMessage(
+            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+            "Таск успешно изменен"
+          );
         })
         .catch((err) => {
-          throw err.message;
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${err
+                .toString()
+                .replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     updatePositionTask(id, position) {
@@ -179,20 +195,25 @@ export default {
           position: position,
         })
         .then((res) => {
-          switch (res.status) {
-            case 200:
-            case 201:
-              this.handlerMessage(1, "Успешно изменено позиция таска")
-              break;
-            default:
-              this.handlerMessage(
-                3,
-                `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${res.status}`
-              );
-          }
+          this.handlerMessage(
+            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+            "Успешно изменено позиция таска"
+          );
         })
         .catch((err) => {
-          throw err.message;
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${err
+                .toString()
+                .replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     dragStart(event, index) {
@@ -225,15 +246,26 @@ export default {
       this.$http
         .post("/tasks/filter", filterDate)
         .then((res) => {
-          if (res.status !== 200) {
-            throw new Error(
-              `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${res.status}`
-            );
-          }
+          this.handlerMessage(
+            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
+            "Фильтр успешно применен"
+          );
           this.taskList = res.data;
         })
         .catch((err) => {
-          throw err.message;
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${err
+                .toString()
+                .replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     handlerGetTaskList() {
@@ -244,7 +276,18 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          throw err.message;
+          let mode = this.parseHttpStatus(
+            err.toString().replace(/[^0-9]/g, "")
+          );
+          if (mode === 4 || mode === 5) {
+            this.handlerMessage(
+              3,
+              `Ошибка, не удалось подгрузить список тасков. 
+                Код ошибки ${err.toString().replace(/[^0-9]/g, "")}`
+            );
+          } else {
+            throw err.message;
+          }
         });
     },
     handlerWatchFilter() {
@@ -257,30 +300,23 @@ export default {
     handlerMessage(mode, msg) {
       switch (mode) {
         case 0:
-          this.$toast.info(msg, {
-            position: "top-right",
-          });
+          this.$toast.info(msg);
           break;
         case 1:
-          this.$toast.success(msg, {
-            position: "top-right",
-          });
+          this.$toast.success(msg);
           break;
         case 2:
-          this.$toast.warning(msg, {
-            position: "top-right",
-          });
+          this.$toast.warning(msg);
           break;
         case 3:
-          this.$toast.error(msg, {
-            position: "top-right",
-          });
+          this.$toast.error(msg);
           break;
         default:
-          this.$toast(msg, {
-            position: "top-right",
-          });
+          this.$toast(msg);
       }
+    },
+    parseHttpStatus(status) {
+      return status ? parseInt(status.toString().split("")[0]) : 0;
     },
   },
   mounted() {

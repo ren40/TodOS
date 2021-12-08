@@ -1,6 +1,6 @@
 import Vue from "vue";
 import App from "./App.vue";
-import Toast from "vue-toastification";
+import Toast, { POSITION } from "vue-toastification";
 import vuetify from "./plugins/vuetify";
 import http from "./plugins/axios";
 import configPlugin from "./plugins/config";
@@ -14,6 +14,7 @@ Vue.use(Toast, {
   transition: "Vue-Toastification__fade",
   maxToasts: 20,
   newestOnTop: true,
+  position: POSITION.TOP_RIGHT,
 });
 
 Vue.use(configPlugin);
