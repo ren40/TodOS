@@ -1,18 +1,23 @@
 const taskModel = require("../models/todoSchema");
 const listUtils = require("../utils/list_utils");
 
-const getAllTask = (req, res) => {
+const getAllTask = (req, res, next) => {
   taskModel
     .find()
     .then((list) => {
       res.json(listUtils.sortList(listUtils.formatedList(list)));
     })
-    .catch((err) => res.sendStatus(500));
+    .catch((err) => {
+      err.statusCode = 404;
+      next(err);
+    });
 };
 
-const filterTaskList = (req, res) => {
+const filterTaskList = (req, res, next) => {
   if (!req.body) {
-    return res.sendStatus(400);
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
   }
   let date_from = new Date(req.body.date_from);
   date_from.setHours(0, 0, 0, 0);
@@ -28,20 +33,28 @@ const filterTaskList = (req, res) => {
     .then((list) => {
       res.json(listUtils.sortList(listUtils.formatedList(list)));
     })
-    .catch((err) => res.sendStatus(500));
+    .catch((err) => {
+      err.statusCode = 404;
+      next(err);
+    });
 };
 
-const getTask = (req, res) => {
+const getTask = (req, res, next) => {
   const id = req.params.id;
   taskModel
     .findOne({ _id: id })
     .then((task) => res.json(task))
-    .catch((err) => res.sendStatus(500));
+    .catch((err) => {
+      err.statusCode = 500;
+      next(err);
+    });
 };
 
-const createNewTask = (req, res) => {
+const createNewTask = (req, res, next) => {
   if (!req.body) {
-    return res.sendStatus(400);
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
   }
 
   const _task = req.body.task;
@@ -60,50 +73,64 @@ const createNewTask = (req, res) => {
       res.status(201).json(data);
     })
     .catch((err) => {
-      res.sendStatus(500);
+      err.statusCode = 500;
+      next(err);
     });
 };
 
-const deleteTask = (req, res) => {
+const deleteTask = (req, res, next) => {
   const id = req.params.id;
+  if (!id) {
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
+  }
   taskModel
     .findByIdAndDelete(id)
     .then((task) => {
       res.json(task);
     })
     .catch((err) => {
-      res.sendStatus(500);
+      err.statusCode = 500;
+      next(err);
     });
 };
 
-const deleteAllTasks = (req, res) => {
+const deleteAllTasks = (req, res, next) => {
   taskModel
     .deleteMany()
-    .then((task) => res.sendStatus(200))
+    .then((_task) => res.sendStatus(200))
     .catch((err) => {
-      res.sendStatus(500);
+      err.statusCode = 500;
+      next(err);
     });
 };
 
-const updateTask = (req, res) => {
-  if (!req.body) {
-    return res.sendStatus(400);
-  }
+const updateTask = (req, res, next) => {
   const id = req.params.id;
+  if (!req.body || !id) {
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
+  }
   taskModel
     .findByIdAndUpdate(id, req.body)
-    .then((task) => {
+    .then((_task) => {
       res.sendStatus(200);
     })
     .catch((err) => {
-      res.sendStatus(500);
+      err.statusCode = 500;
+      next(err);
     });
 };
 
-const updatePositionTask = (req, res) => {
+const updatePositionTask = (req, res, next) => {
   if (!req.body) {
-    return res.sendStatus(400);
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
   }
+
   const newPosition = req.body.position.newPosition;
   const id = req.body.id;
   taskModel
@@ -130,7 +157,10 @@ const updatePositionTask = (req, res) => {
       },
     ])
     .then((result) => res.sendStatus(200))
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      err.statusCode = 500;
+      next(err);
+    });
 };
 
 module.exports = {
