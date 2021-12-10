@@ -83,25 +83,9 @@ export default {
               complete: res.data.complete,
               date_create: res.data.date_create,
             });
-            this.handlerMessage(
-              this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-              "Таск успешно добавлен"
-            );
           })
           .catch((err) => {
-            let mode = this.parseHttpStatus(
-              err.toString().replace(/[^0-9]/g, "")
-            );
-            if (mode === 4 || mode === 5) {
-              this.handlerMessage(
-                3,
-                `Ошибка, таск не добавлен. Код ошибки ${err
-                  .toString()
-                  .replace(/[^0-9]/g, "")}`
-              );
-            } else {
-              throw err.message;
-            }
+            this.handlerMessage(true, err.message);
           });
         this.task = "";
       }
@@ -110,52 +94,21 @@ export default {
       let taskID = this.taskList[index].id;
       this.$http
         .delete(`/task/${taskID}`)
-        .then((res) => {
+        .then(() => {
           this.taskList.splice(index, 1);
-          this.handlerMessage(
-            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-            "Таск удален"
-          );
         })
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не удалось удалить таск, id таска ${taskID}. 
-                Код ошибки ${err.toString().replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     deleteAllTask() {
       this.$http
         .delete(`/tasks`)
-        .then((res) => {
+        .then(() => {
           this.handlerGetTaskList();
-          this.handlerMessage(
-            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-            "Удалены все таски"
-          );
         })
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не удалось удалить все таски. Код ошибки ${err
-                .toString()
-                .replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     selectTask(index, inSelect) {
@@ -164,27 +117,11 @@ export default {
         .patch(`/task/${taskID}`, {
           complete: inSelect,
         })
-        .then((res) => {
+        .then(() => {
           this.taskList[index].complete = inSelect;
-          this.handlerMessage(
-            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-            "Таск успешно изменен"
-          );
         })
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${err
-                .toString()
-                .replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     updatePositionTask(id, position) {
@@ -194,26 +131,9 @@ export default {
           id: taskID,
           position: position,
         })
-        .then((res) => {
-          this.handlerMessage(
-            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-            "Успешно изменено позиция таска"
-          );
-        })
+        .then(() => {})
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не удалось изменить таск, id таска ${taskID}. Код ошибки ${err
-                .toString()
-                .replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     dragStart(event, index) {
@@ -246,26 +166,10 @@ export default {
       this.$http
         .post("/tasks/filter", filterDate)
         .then((res) => {
-          this.handlerMessage(
-            this.parseHttpStatus(res.status) === 2 ? 1 : 2,
-            "Фильтр успешно применен"
-          );
           this.taskList = res.data;
         })
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не получилось получить отфильтрованный список. Код ошибки ${err
-                .toString()
-                .replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     handlerGetTaskList() {
@@ -276,18 +180,7 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          let mode = this.parseHttpStatus(
-            err.toString().replace(/[^0-9]/g, "")
-          );
-          if (mode === 4 || mode === 5) {
-            this.handlerMessage(
-              3,
-              `Ошибка, не удалось подгрузить список тасков. 
-                Код ошибки ${err.toString().replace(/[^0-9]/g, "")}`
-            );
-          } else {
-            throw err.message;
-          }
+          this.handlerMessage(true, err.message);
         });
     },
     handlerWatchFilter() {
@@ -297,26 +190,12 @@ export default {
         }
       });
     },
-    handlerMessage(mode, msg) {
-      switch (mode) {
-        case 0:
-          this.$toast.info(msg);
-          break;
-        case 1:
-          this.$toast.success(msg);
-          break;
-        case 2:
-          this.$toast.warning(msg);
-          break;
-        case 3:
-          this.$toast.error(msg);
-          break;
-        default:
-          this.$toast(msg);
+    handlerMessage(isError, msg) {
+      if (isError) {
+        this.$toast.error(msg);
+      } else {
+        this.$toast.info(msg);
       }
-    },
-    parseHttpStatus(status) {
-      return status ? parseInt(status.toString().split("")[0]) : 0;
     },
   },
   mounted() {
