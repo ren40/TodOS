@@ -174,7 +174,13 @@ const searchTask = (req, res, next) => {
   taskModel
     .find()
     .then((result) =>
-      res.status(200).json(listUtils.searchInList(result, searchItem))
+      res
+        .status(200)
+        .json(
+          listUtils.sortList(
+            listUtils.formatedList(listUtils.searchInList(result, searchItem))
+          )
+        )
     )
     .catch((err) => {
       err.statusCode = 500;
