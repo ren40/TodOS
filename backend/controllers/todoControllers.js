@@ -163,6 +163,25 @@ const updatePositionTask = (req, res, next) => {
     });
 };
 
+const searchTask = (req, res, next) => {
+  if (!req.body) {
+    const error = new Error("Invalid request");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const searchItem = req.body.search;
+  taskModel
+    .find()
+    .then((result) =>
+      res.status(200).json(listUtils.searchInList(result, searchItem))
+    )
+    .catch((err) => {
+      err.statusCode = 500;
+      next(err);
+    });
+};
+
 module.exports = {
   filterTaskList,
   getAllTask,
@@ -172,4 +191,5 @@ module.exports = {
   updateTask,
   updatePositionTask,
   createNewTask,
+  searchTask,
 };

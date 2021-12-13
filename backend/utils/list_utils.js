@@ -25,7 +25,18 @@ const sortList = (list) => {
 
   return list;
 };
+
+const searchInList = (list, searchItem) => {
+  return Array(...list).filter((item) => {
+    return String(searchItem)
+      .toLowerCase()
+      .split(" ")
+      .every((x) => item.task.title.toLowerCase().includes(x));
+  });
+};
+
 module.exports = {
   formatedList,
   sortList,
+  searchInList
 };
