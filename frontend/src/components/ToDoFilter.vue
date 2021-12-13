@@ -1,6 +1,8 @@
 <template>
   <div class="todo__item__filter">
-    <h2 class="todo__filter_header">Filter ToDo</h2>
+    <h2 class="todo__filter_header">
+      <v-icon>{{ icons.mdiFilter }}</v-icon> Filter ToDo
+    </h2>
     <v-container class="todo__filter_container align-center">
       <v-row>
         <v-col cols="1" class="todo__filter_container">
@@ -63,23 +65,23 @@
             ></v-date-picker>
           </v-menu>
         </v-col>
-        <v-col cols="2" class="todo__filter_container">
+        <v-col cols="2" class="d-flex justify-end">
           <v-btn
             class="todo__filter_btn"
             text
             :disabled="!isActive"
-            @click="$emit('filterDate', date_from, date_to)"
+            @click="$emit('filter', date_from, date_to)"
           >
             Apply
           </v-btn>
         </v-col>
       </v-row>
     </v-container>
-    <v-divider></v-divider>
   </div>
 </template>
 
 <script>
+import { mdiFilter } from "@mdi/js";
 export default {
   name: "ToDoFilter",
   data() {
@@ -90,6 +92,7 @@ export default {
       menu_from: false,
 
       isActive: false,
+      icons: { mdiFilter },
     };
   },
   mounted: function () {

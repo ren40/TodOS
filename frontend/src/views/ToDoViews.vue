@@ -16,7 +16,11 @@
         <v-sheet elevation="1" rounded>
           <ul class="todo__list px-3">
             <li class="todo__list_nav">
-              <ToDoFilter ref="filter" @filterDate="filterDate"></ToDoFilter>
+              <ToDoHeader
+                @filterDate="filterDate"
+                @returnList="returnLastList"
+                @search="searchToDo"
+              />
             </li>
             <ToDoItem
               v-for="(item, index) in taskList"
@@ -45,15 +49,15 @@
 
 <script>
 import ToDoItem from "../components/ToDoItem.vue";
-import ToDoFilter from "../components/ToDoFilter.vue";
 import ToDoFooter from "../components/ToDoFooter.vue";
+import ToDoHeader from "../components/ToDoHeader.vue";
 
 export default {
   name: "ToDoViews",
   components: {
     ToDoItem,
-    ToDoFilter,
     ToDoFooter,
+    ToDoHeader,
   },
   data: () => ({
     task: "",
@@ -183,12 +187,11 @@ export default {
           this.handlerMessage(true, err.message);
         });
     },
-    handlerWatchFilter() {
-      this.$watch("$refs.filter.isActive", (new_value) => {
-        if (new_value === false && this.lastListSize != this.taskList.length) {
-          this.handlerGetTaskList();
-        }
-      });
+    returnLastList(returnList) {
+      console.log(returnList);
+      if (returnList && this.lastListSize != this.taskList.length) {
+        this.handlerGetTaskList();
+      }
     },
     handlerMessage(isError, msg) {
       if (isError) {
@@ -197,10 +200,19 @@ export default {
         this.$toast.info(msg);
       }
     },
+    searchToDo(search_item) {
+      this.$http
+        .patch("/task/search", { search: search_item })
+        .then((res) => {
+          this.taskList = res.data;
+        })
+        .catch((err) => {
+          this.handlerMessage(true, err.message);
+        });
+    },
   },
   mounted() {
     this.handlerGetTaskList();
-    this.handlerWatchFilter();
   },
 };
 </script>
