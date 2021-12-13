@@ -7,10 +7,10 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <ToDoFilter ref="filter" @filter="filter" />
+        <ToDoFilter @filter="filter" @resetList="returnList" />
       </v-tab-item>
       <v-tab-item>
-        <ToDoFind @find="searchToDo" />
+        <ToDoFind @find="searchToDo" @resetList="returnList" />
       </v-tab-item>
     </v-tabs-items>
     <v-divider></v-divider>
@@ -29,29 +29,22 @@ export default {
   data() {
     return {
       tab: null,
-      items: ["filter", "find"],
+      items: ["filter", "search"],
     };
   },
   methods: {
     filter(from, to) {
-      console.log(from, to);
       this.$emit("filterDate", from, to);
     },
-    searchToDo(search_item){
-        if(search_item) {
-            this.$emit("search", search_item)
-        }
+    searchToDo(search_item) {
+      if (search_item) {
+        this.$emit("search", search_item);
+      }
     },
-    handlerWatchFilter() {
-      this.$watch("$refs.filter.isActive", (new_value) => {
-        console.log(new_value);
-        if (new_value === false) {
-          this.$emit("returnList", true);
-        }
-      });
-    },
-    mounted() {
-      this.handlerWatchFilter()
+    returnList(returnList) {
+      if (returnList === true) {
+        this.$emit("returnList", returnList);
+      }
     },
   },
 };

@@ -5,7 +5,7 @@
     </h2>
     <v-container class="todo__filter_container align-center">
       <v-row>
-        <v-col cols="1" class="todo__filter_container">
+        <v-col cols="2" class="todo__filter_container">
           <v-checkbox v-model="isActive" class="todo__filter_check">
             <template v-slot:label>
               <span class="checkbox__label"> Activate filter </span>
@@ -94,6 +94,16 @@ export default {
       isActive: false,
       icons: { mdiFilter },
     };
+  },
+  methods: {
+    handlerActive(new_value) {
+      if (new_value === false) {
+        this.$emit("resetList", true);
+      }
+    },
+  },
+  watch: {
+    isActive: "handlerActive",
   },
   mounted: function () {
     this.date_from.setDate(this.date_from.getDate() - 1);

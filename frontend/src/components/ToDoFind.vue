@@ -40,8 +40,18 @@ export default {
   },
   computed: {
     isActive() {
-      return this.todoTitle > 0 ? true : false;
+      return this.todoTitle.length > 0 ? true : false;
     },
+  },
+  methods: {
+    handlerActive(new_value) {
+      if (new_value === false) {
+        this.$emit("resetList", true);
+      }
+    },
+  },
+  watch: {
+    isActive: "handlerActive",
   },
 };
 </script>

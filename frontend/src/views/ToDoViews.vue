@@ -188,7 +188,6 @@ export default {
         });
     },
     returnLastList(returnList) {
-      console.log(returnList);
       if (returnList && this.lastListSize != this.taskList.length) {
         this.handlerGetTaskList();
       }
