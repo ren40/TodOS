@@ -7,7 +7,7 @@
     >
       <v-btn
         slot="btn"
-        class="todo__find_btn"
+        class="todo__filter_btn"
         text
         :class="{ visible: !isActiveFilter }"
         @click="handlerFilter"
@@ -30,7 +30,7 @@
       >
     </ToDoFind>
     <v-col v-if="activeComponents.length > 1" class="d-flex justify-end">
-      <v-btn @click="handlerMultipleRequest">apply</v-btn>
+      <v-btn text @click="handlerMultipleRequest">apply</v-btn>
     </v-col>
 
     <v-divider></v-divider>

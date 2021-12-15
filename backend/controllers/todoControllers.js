@@ -19,10 +19,17 @@ const filterTaskList = (req, res, next) => {
     error.statusCode = 400;
     throw error;
   }
+
   let date_from = new Date(req.body.date_from);
   date_from.setHours(0, 0, 0, 0);
   let date_to = new Date(req.body.date_to);
   date_to.setHours(23, 59, 59, 999);
+
+  let searchItem = "";
+  if (req.query && req.query.search) {
+    searchItem = req.query.searchItem;
+  }
+
   taskModel
     .find({
       $and: [
@@ -31,7 +38,17 @@ const filterTaskList = (req, res, next) => {
       ],
     })
     .then((list) => {
-      res.json(listUtils.sortList(listUtils.formatedList(list)));
+      if (searchItem) {
+        res
+          .status(200)
+          .json(
+            listUtils.sortList(
+              listUtils.formatedList(listUtils.searchInList(list, searchItem))
+            )
+          );
+      } else {
+        res.status(200).json(listUtils.sortList(listUtils.formatedList(list)));
+      }
     })
     .catch((err) => {
       err.statusCode = 404;
@@ -171,17 +188,41 @@ const searchTask = (req, res, next) => {
   }
 
   const searchItem = req.body.search;
+
+  let date_from = null;
+  let date_to = null;
+
+  if (req.query && req.query.filter) {
+    date_from = new Date(req.query.date_from);
+    date_from.setHours(0, 0, 0, 0);
+    date_to = new Date(req.query.date_to);
+    date_to.setHours(23, 59, 59, 999);
+  }
+
   taskModel
     .find()
-    .then((result) =>
-      res
-        .status(200)
-        .json(
-          listUtils.sortList(
-            listUtils.formatedList(listUtils.searchInList(result, searchItem))
-          )
-        )
-    )
+    .then((result) => {
+      if (req.query.filter) {
+        res.status(200).json(
+          listUtils
+            .formatedList(listUtils.searchInList(result, searchItem))
+            .filter((item) => {
+              let date = new Date(item.date_create);
+              if (date_from <= date && date <= date_to) {
+                return item;
+              }
+            })
+        );
+      } else {
+        res
+          .status(200)
+          .json(
+            listUtils.sortList(
+              listUtils.formatedList(listUtils.searchInList(result, searchItem))
+            )
+          );
+      }
+    })
     .catch((err) => {
       err.statusCode = 500;
       next(err);
