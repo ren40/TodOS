@@ -89,7 +89,7 @@ export default {
             });
           })
           .catch((err) => {
-            this.handlerMessage(true, err.message);
+            this.handlerErrorMessage(err.message);
           });
         this.task = "";
       }
@@ -102,7 +102,7 @@ export default {
           this.taskList.splice(index, 1);
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     deleteAllTask() {
@@ -112,7 +112,7 @@ export default {
           this.handlerGetTaskList();
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     selectTask(index, inSelect) {
@@ -125,7 +125,7 @@ export default {
           this.taskList[index].complete = inSelect;
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     updatePositionTask(id, position) {
@@ -137,7 +137,7 @@ export default {
         })
         .then(() => {})
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     dragStart(event, index) {
@@ -173,7 +173,7 @@ export default {
           this.taskList = res.data;
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     handlerGetTaskList() {
@@ -184,7 +184,7 @@ export default {
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
     returnLastList(returnList) {
@@ -192,12 +192,11 @@ export default {
         this.handlerGetTaskList();
       }
     },
-    handlerMessage(isError, msg) {
-      if (isError) {
-        this.$toast.error(msg);
-      } else {
-        this.$toast.info(msg);
-      }
+    handlerMessage(msg) {
+      this.$toast.info(msg);
+    },
+    handlerErrorMessage(msg) {
+      this.$toast.error(msg);
     },
     searchToDo(search_item) {
       this.$http

@@ -26,7 +26,7 @@ export default {
   methods: {
     isOnLine(new_value) {
       if (!new_value) {
-        this.$toast.info("Упс...Интернет соединение потеряно");
+        this.$toast.error("Упс...Интернет соединение потеряно");
       } else {
         this.$toast.info("Интернет соединение восстановлено");
       }
