@@ -66,14 +66,16 @@
           </v-menu>
         </v-col>
         <v-col cols="2" class="d-flex justify-end">
-          <v-btn
+          <!-- <v-btn
             class="todo__filter_btn"
             text
-            :disabled="!isActive"
+            :class="{ visible: !isActive }"
             @click="$emit('filter', date_from, date_to)"
           >
             Apply
-          </v-btn>
+          </v-btn> -->
+
+          <slot name="btn"></slot>
         </v-col>
       </v-row>
     </v-container>
@@ -97,9 +99,7 @@ export default {
   },
   methods: {
     handlerActive(new_value) {
-      if (new_value === false) {
-        this.$emit("resetList", true);
-      }
+      this.$emit("changeActive", "Filter", new_value);
     },
   },
   watch: {

@@ -12,13 +12,15 @@
           ></v-text-field>
         </v-col>
         <v-col cols="4" class="d-flex justify-end">
-          <v-btn
+          <!-- <v-btn
             class="todo__find_btn"
             text
             :disabled="!isActive"
             @click="$emit('find', todoTitle)"
             >Apply</v-btn
-          >
+          > -->
+
+          <slot name="btn"></slot>
         </v-col>
       </v-row>
     </v-container>
@@ -45,9 +47,7 @@ export default {
   },
   methods: {
     handlerActive(new_value) {
-      if (new_value === false) {
-        this.$emit("resetList", true);
-      }
+      this.$emit("changeActive", "Find", new_value);
     },
   },
   watch: {

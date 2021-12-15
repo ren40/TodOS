@@ -162,13 +162,13 @@ export default {
 
       event.dataTransfer.clearData();
     },
-    filterDate(_date_from, _date_to) {
+    filterDate(_date_from, _date_to, parm) {
       const filterDate = {
         date_from: _date_from ? _date_from : "",
         date_to: _date_to ? _date_to : "",
       };
       this.$http
-        .post("/tasks/filter", filterDate)
+        .post("/tasks/filter", filterDate, { params: parm })
         .then((res) => {
           this.taskList = res.data;
         })
@@ -187,8 +187,8 @@ export default {
           this.handlerErrorMessage(err.message);
         });
     },
-    returnLastList(returnList) {
-      if (returnList && this.lastListSize != this.taskList.length) {
+    returnLastList() {
+      if (this.lastListSize != this.taskList.length) {
         this.handlerGetTaskList();
       }
     },
@@ -198,9 +198,10 @@ export default {
     handlerErrorMessage(msg) {
       this.$toast.error(msg);
     },
-    searchToDo(search_item) {
+    searchToDo(search_item, parm) {
+      console.log(parm);
       this.$http
-        .patch("/task/search", { search: search_item })
+        .patch("/task/search", { search: search_item }, { params: parm })
         .then((res) => {
           this.taskList = res.data;
         })
