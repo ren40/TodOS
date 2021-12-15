@@ -15,11 +15,7 @@
       >
     </ToDoFilter>
     <v-divider></v-divider>
-    <ToDoFind
-      ref="search"
-      @resetList="returnList"
-      @changeActive="changeActive"
-    >
+    <ToDoFind ref="search" @resetList="returnList" @changeActive="changeActive">
       <v-btn
         slot="btn"
         class="todo__find_btn"
@@ -78,7 +74,15 @@ export default {
     },
 
     returnList() {
-      this.$emit("returnList");
+      if (this.activeComponents.length === 0) {
+        this.$emit("returnList");
+      } else {
+        if (this.activeComponents[0] === "Find") {
+          this.handlerSearch();
+        } else {
+          this.handlerFilter();
+        }
+      }
     },
 
     handlerSearch() {
