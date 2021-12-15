@@ -12,14 +12,6 @@
           ></v-text-field>
         </v-col>
         <v-col cols="4" class="d-flex justify-end">
-          <!-- <v-btn
-            class="todo__find_btn"
-            text
-            :disabled="!isActive"
-            @click="$emit('find', todoTitle)"
-            >Apply</v-btn
-          > -->
-
           <slot name="btn"></slot>
         </v-col>
       </v-row>
