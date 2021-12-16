@@ -4,31 +4,17 @@
       ref="filter"
       @resetList="returnList"
       @changeActive="changeActive"
+      @filter="handlerFilter"
     >
-      <v-btn
-        slot="btn"
-        class="todo__filter_btn"
-        text
-        :class="{ visible: !isActiveFilter }"
-        @click="handlerFilter"
-        >Apply</v-btn
-      >
     </ToDoFilter>
     <v-divider></v-divider>
-    <ToDoFind ref="search" @resetList="returnList" @changeActive="changeActive">
-      <v-btn
-        slot="btn"
-        class="todo__find_btn"
-        text
-        :class="{ visible: !isActiveFind }"
-        @click="handlerSearch"
-        >Apply</v-btn
-      >
+    <ToDoFind
+      ref="search"
+      @resetList="returnList"
+      @changeActive="changeActive"
+      @search="handlerSearch"
+    >
     </ToDoFind>
-    <v-col v-if="activeComponents.length > 1" class="d-flex justify-end">
-      <v-btn text @click="handlerMultipleRequest">apply</v-btn>
-    </v-col>
-
     <v-divider></v-divider>
   </div>
 </template>
@@ -47,20 +33,6 @@ export default {
       activeComponents: [],
     };
   },
-  computed: {
-    isActiveFind() {
-      return this.activeComponents.indexOf("Find") >= 0 &&
-        this.activeComponents.length < 2
-        ? true
-        : false;
-    },
-    isActiveFilter() {
-      return this.activeComponents.indexOf("Filter") >= 0 &&
-        this.activeComponents.length < 2
-        ? true
-        : false;
-    },
-  },
   methods: {
     changeActive(componentName, status) {
       if (status) {
@@ -70,7 +42,6 @@ export default {
         this.activeComponents.splice(index, 1);
         this.returnList();
       }
-      console.log(this.activeComponents);
     },
 
     returnList() {
@@ -78,29 +49,38 @@ export default {
         this.$emit("returnList");
       } else {
         if (this.activeComponents[0] === "Find") {
-          this.handlerSearch();
+          this.handlerSearch(this.$refs.search.todoTitle);
         } else {
-          this.handlerFilter();
+          this.handlerFilter(
+            this.$refs.filter.date_from,
+            this.$refs.filter.date_to
+          );
         }
       }
     },
 
-    handlerSearch() {
-      let searchTitle = this.$refs.search.todoTitle;
-      if (searchTitle) {
+    handlerSearch(searchItem) {
+      if (searchItem && this.activeComponents.length === 1) {
         let params = null;
-        this.$emit("search", searchTitle, params);
+        this.$emit("search", searchItem, params);
+      } else if (searchItem && this.activeComponents.length > 1) {
+        this.handlerMultipleRequest();
+      } else {
+        this.returnList();
       }
     },
 
-    handlerFilter() {
-      const date_from = this.$refs.filter.date_from;
-      const date_to = this.$refs.filter.date_to;
-      if (date_from && date_to) {
+    handlerFilter(from, to) {
+      if (from && to && this.activeComponents.length === 1) {
         let params = null;
-        this.$emit("filterDate", date_from, date_to, params);
+        this.$emit("filterDate", from, to, params);
+      } else if (from && to && this.activeComponents.length > 1) {
+        this.handlerMultipleRequest();
+      } else {
+        this.returnList();
       }
     },
+
     handlerMultipleRequest() {
       const searchTitle = this.$refs.search.todoTitle;
       const date_from = this.$refs.filter.date_from;

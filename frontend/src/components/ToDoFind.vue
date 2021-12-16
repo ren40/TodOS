@@ -11,9 +11,6 @@
             label="Title todo"
           ></v-text-field>
         </v-col>
-        <v-col cols="4" class="d-flex justify-end">
-          <slot name="btn"></slot>
-        </v-col>
       </v-row>
     </v-container>
   </div>
@@ -21,6 +18,7 @@
 
 <script>
 import { mdiMagnify } from "@mdi/js";
+import debounce from "lodash.debounce";
 
 export default {
   name: "ToDoFind",
@@ -44,6 +42,17 @@ export default {
   },
   watch: {
     isActive: "handlerActive",
+    todoTitle(...args) {
+      this.debounceWatch(...args);
+    },
+  },
+  created() {
+    this.debounceWatch = debounce((new_value) => {
+      this.$emit("search", new_value);
+    }, 500);
+  },
+  beforeUnmount() {
+    this.debounceWatch.cancel();
   },
 };
 </script>

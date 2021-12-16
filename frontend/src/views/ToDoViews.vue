@@ -192,9 +192,6 @@ export default {
         this.handlerGetTaskList();
       }
     },
-    handlerMessage(msg) {
-      this.$toast.info(msg);
-    },
     handlerErrorMessage(msg) {
       this.$toast.error(msg);
     },
@@ -206,7 +203,7 @@ export default {
           this.taskList = res.data;
         })
         .catch((err) => {
-          this.handlerMessage(true, err.message);
+          this.handlerErrorMessage(err.message);
         });
     },
   },

@@ -66,7 +66,14 @@
           </v-menu>
         </v-col>
         <v-col cols="2" class="d-flex justify-end">
-          <slot name="btn"></slot>
+         <v-btn
+            class="todo__filter_btn"
+            text
+            :disabled="!isActive"
+            @click="$emit('filter', date_from, date_to)"
+          >
+            Apply
+          </v-btn>
         </v-col>
       </v-row>
     </v-container>
