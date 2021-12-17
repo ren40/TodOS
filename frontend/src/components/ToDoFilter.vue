@@ -1,7 +1,7 @@
 <template>
   <div class="todo__item__filter">
     <h2 class="todo__filter_header">
-      <v-icon>{{ icons.mdiFilter }}</v-icon> Filter ToDo
+      <v-icon>{{ icons.mdiFilter }}</v-icon> Filter
     </h2>
     <v-container class="todo__filter_container align-center">
       <v-row>

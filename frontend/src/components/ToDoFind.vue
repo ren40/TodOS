@@ -1,7 +1,7 @@
 <template>
   <div class="todo__item__find">
     <h2 class="todo__find_header">
-      <v-icon>{{ icons.mdiMagnify }}</v-icon> Search ToDo
+      <v-icon>{{ icons.mdiMagnify }}</v-icon> Search
     </h2>
     <v-container class="todo__find_container align-center">
       <v-row>
