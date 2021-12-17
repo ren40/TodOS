@@ -61,8 +61,11 @@ export default {
 
     handlerSearch(searchItem) {
       if (searchItem && this.activeComponents.length === 1) {
-        let params = null;
-        this.$emit("search", searchItem, params);
+        let params = {
+          search: true,
+          searchItem: searchItem,
+        };
+        this.$emit("searchAndFilter", params);
       } else if (searchItem && this.activeComponents.length > 1) {
         this.handlerMultipleRequest();
       } else {
@@ -72,8 +75,12 @@ export default {
 
     handlerFilter(from, to) {
       if (from && to && this.activeComponents.length === 1) {
-        let params = null;
-        this.$emit("filterDate", from, to, params);
+        let params = {
+          filter: true,
+          date_from: from,
+          date_to: to,
+        };
+        this.$emit("searchAndFilter", params);
       } else if (from && to && this.activeComponents.length > 1) {
         this.handlerMultipleRequest();
       } else {
@@ -85,20 +92,14 @@ export default {
       const searchTitle = this.$refs.search.todoTitle;
       const date_from = this.$refs.filter.date_from;
       const date_to = this.$refs.filter.date_to;
-      if (this.activeComponents[0] === "Find") {
-        let params = {
-          filter: true,
-          date_from: date_from,
-          date_to: date_to,
-        };
-        this.$emit("search", searchTitle, params);
-      } else {
-        let params = {
-          search: true,
-          searchItem: searchTitle,
-        };
-        this.$emit("filterDate", date_from, date_to, params);
-      }
+      let params = {
+        filter: true,
+        date_from: date_from,
+        date_to: date_to,
+        search: true,
+        searchItem: searchTitle,
+      };
+      this.$emit("searchAndFilter", params);
     },
   },
 };

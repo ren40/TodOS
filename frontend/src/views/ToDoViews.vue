@@ -17,9 +17,8 @@
           <ul class="todo__list px-3">
             <li class="todo__list_nav">
               <ToDoHeader
-                @filterDate="filterDate"
+                @searchAndFilter="searchAndFilter"
                 @returnList="returnLastList"
-                @search="searchToDo"
               />
             </li>
             <ToDoItem
@@ -162,20 +161,6 @@ export default {
 
       event.dataTransfer.clearData();
     },
-    filterDate(_date_from, _date_to, parm) {
-      const filterDate = {
-        date_from: _date_from ? _date_from : "",
-        date_to: _date_to ? _date_to : "",
-      };
-      this.$http
-        .post("/tasks/filter", filterDate, { params: parm })
-        .then((res) => {
-          this.taskList = res.data;
-        })
-        .catch((err) => {
-          this.handlerErrorMessage(err.message);
-        });
-    },
     handlerGetTaskList() {
       this.$http
         .get("/tasks")
@@ -195,10 +180,9 @@ export default {
     handlerErrorMessage(msg) {
       this.$toast.error(msg);
     },
-    searchToDo(search_item, parm) {
-      console.log(parm);
+    searchAndFilter(parm) {
       this.$http
-        .patch("/task/search", { search: search_item }, { params: parm })
+        .patch("/task", null, { params: parm })
         .then((res) => {
           this.taskList = res.data;
         })
