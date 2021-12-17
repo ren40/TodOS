@@ -8,11 +8,10 @@ router.get("/", function (req, res) {
 });
 
 router.get("/tasks", todoController.getAllTask);
-router.post("/tasks/filter", jsonParser, todoController.filterTaskList);
 router.get("/task/:id", todoController.getTask);
 router.post("/task", jsonParser, todoController.createNewTask);
 router.patch("/task/position", jsonParser, todoController.updatePositionTask);
-router.patch("/task/search", jsonParser, todoController.searchTask);
+router.patch("/task", jsonParser, todoController.searchAndFilter);
 router.patch("/task/:id", jsonParser, todoController.updateTask);
 router.delete("/tasks", todoController.deleteAllTasks);
 router.delete("/task/:id", todoController.deleteTask);

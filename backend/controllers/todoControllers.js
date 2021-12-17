@@ -180,15 +180,9 @@ const updatePositionTask = (req, res, next) => {
     });
 };
 
-const searchTask = (req, res, next) => {
-  if (!req.body) {
-    const error = new Error("Invalid request");
-    error.statusCode = 400;
-    throw error;
-  }
-
+const searchAndFilter = (req, res, next) => {
   const searchItem = req.body.search;
-
+  let query = {};
   let date_from = null;
   let date_to = null;
 
@@ -197,40 +191,27 @@ const searchTask = (req, res, next) => {
     date_from.setHours(0, 0, 0, 0);
     date_to = new Date(req.query.date_to);
     date_to.setHours(23, 59, 59, 999);
+    query["$and"] = [
+      { date_create: { $gte: date_from.toISOString() } },
+      { date_create: { $lte: date_to.toISOString() } },
+    ];
+  }
+
+  if (req.query && req.query.search) {
+    query["task.title"] = { $regex: req.query.searchItem };
   }
 
   taskModel
-    .find()
+    .find(query)
     .then((result) => {
-      if (req.query.filter) {
-        res.status(200).json(
-          listUtils
-            .formatedList(listUtils.searchInList(result, searchItem))
-            .filter((item) => {
-              let date = new Date(item.date_create);
-              if (date_from <= date && date <= date_to) {
-                return item;
-              }
-            })
-        );
-      } else {
-        res
-          .status(200)
-          .json(
-            listUtils.sortList(
-              listUtils.formatedList(listUtils.searchInList(result, searchItem))
-            )
-          );
-      }
+      res.status(200).json(listUtils.sortList(listUtils.formatedList(result)));
     })
     .catch((err) => {
       err.statusCode = 500;
       next(err);
     });
 };
-
 module.exports = {
-  filterTaskList,
   getAllTask,
   getTask,
   deleteTask,
@@ -238,5 +219,5 @@ module.exports = {
   updateTask,
   updatePositionTask,
   createNewTask,
-  searchTask,
+  searchAndFilter,
 };
