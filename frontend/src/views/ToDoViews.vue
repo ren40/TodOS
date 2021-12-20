@@ -20,6 +20,8 @@
                 @searchAndFilter="searchAndFilter"
                 @returnList="returnLastList"
               />
+              <v-label>Total task: {{ totalTask }}</v-label>
+              <v-divider></v-divider>
             </li>
             <ToDoItem
               v-for="(item, index) in taskList"
@@ -62,6 +64,8 @@ export default {
     task: "",
     taskList: [],
     lastListSize: 0,
+    totalTask: 0,
+    page: 0,
     //
   }),
   methods: {
@@ -163,9 +167,15 @@ export default {
     },
     handlerGetTaskList() {
       this.$http
-        .get("/tasks")
+        .get("/tasks", {
+          params: {
+            limit: this.$appConfig.service.LIMIT_ELEMENT,
+            page: this.page,
+          },
+        })
         .then((res) => {
-          this.taskList = res.data;
+          this.taskList = res.data.tasks;
+          this.totalTask = res.data.totalElement;
           this.lastListSize = this.taskList.length;
         })
         .catch((err) => {

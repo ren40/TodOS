@@ -15,7 +15,6 @@
       @search="handlerSearch"
     >
     </ToDoFind>
-    <v-divider></v-divider>
   </div>
 </template>
 
