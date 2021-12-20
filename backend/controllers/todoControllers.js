@@ -1,15 +1,16 @@
 const taskModel = require("../models/todoSchema");
 
 const getAllTask = (req, res, next) => {
-  const page = req.query.page || 0;
-  const limitItems = req.query.limit || 10;
+  const page = parseInt(req.query.page) || 0;
+  const limitItems = parseInt(req.query.limit) || 10;
+  const skips = (page - 1) * limitItems;
   let response = {};
 
   taskModel
     .find()
     .sort({ date_create: -1 })
     .limit(limitItems)
-    .skip(page * limitItems)
+    .skip(skips)
     .select({
       _id: 1,
       complete: 1,
@@ -159,8 +160,9 @@ const searchAndFilter = (req, res, next) => {
   let query = {};
   let date_from = null;
   let date_to = null;
-  const page = req.query.page || 0;
-  const limitItems = req.query.limit || 10;
+  const page = parseInt(req.query.page) || 0;
+  const limitItems = parseInt(req.query.limit) || 10;
+  const skips = (page - 1) * limitItems;
 
   if (req.query && req.query.filter) {
     date_from = new Date(req.query.date_from);
@@ -180,8 +182,8 @@ const searchAndFilter = (req, res, next) => {
   taskModel
     .find(query)
     .sort({ position: 1 })
-    .limit(page)
-    .skip(limitItems * page)
+    .limit(limitItems)
+    .skip(skips)
     .select({
       _id: 1,
       complete: 1,
