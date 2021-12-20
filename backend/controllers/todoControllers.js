@@ -1,9 +1,15 @@
 const taskModel = require("../models/todoSchema");
 
 const getAllTask = (req, res, next) => {
+  const page = req.query.page || 0;
+  const limitItems = req.query.limit || 10;
+  let response = {};
+
   taskModel
     .find()
-    .sort({ position: 1 })
+    .sort({ date_create: -1 })
+    .limit(limitItems)
+    .skip(page * limitItems)
     .select({
       _id: 1,
       complete: 1,
@@ -12,7 +18,12 @@ const getAllTask = (req, res, next) => {
       "task.title": 1,
     })
     .then((list) => {
-      res.status(200).json(list);
+      response["tasks"] = list;
+      return taskModel.countDocuments({});
+    })
+    .then((result) => {
+      response["totalElement"] = result;
+      res.status(200).json(response);
     })
     .catch((err) => {
       err.statusCode = 404;
@@ -145,10 +156,11 @@ const updatePositionTask = (req, res, next) => {
 };
 
 const searchAndFilter = (req, res, next) => {
-  const searchItem = req.body.search;
   let query = {};
   let date_from = null;
   let date_to = null;
+  const page = req.query.page || 0;
+  const limitItems = req.query.limit || 10;
 
   if (req.query && req.query.filter) {
     date_from = new Date(req.query.date_from);
@@ -168,6 +180,8 @@ const searchAndFilter = (req, res, next) => {
   taskModel
     .find(query)
     .sort({ position: 1 })
+    .limit(page)
+    .skip(limitItems * page)
     .select({
       _id: 1,
       complete: 1,
