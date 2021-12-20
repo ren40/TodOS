@@ -1,54 +1,18 @@
 const taskModel = require("../models/todoSchema");
-const listUtils = require("../utils/list_utils");
 
 const getAllTask = (req, res, next) => {
   taskModel
     .find()
-    .then((list) => {
-      res.json(listUtils.sortList(listUtils.formatedList(list)));
-    })
-    .catch((err) => {
-      err.statusCode = 404;
-      next(err);
-    });
-};
-
-const filterTaskList = (req, res, next) => {
-  if (!req.body) {
-    const error = new Error("Invalid request");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  let date_from = new Date(req.body.date_from);
-  date_from.setHours(0, 0, 0, 0);
-  let date_to = new Date(req.body.date_to);
-  date_to.setHours(23, 59, 59, 999);
-
-  let searchItem = "";
-  if (req.query && req.query.search) {
-    searchItem = req.query.searchItem;
-  }
-
-  taskModel
-    .find({
-      $and: [
-        { date_create: { $gte: date_from.toISOString() } },
-        { date_create: { $lte: date_to.toISOString() } },
-      ],
+    .sort({ position: 1 })
+    .select({
+      _id: 1,
+      complete: 1,
+      position: 1,
+      date_create: 1,
+      "task.title": 1,
     })
     .then((list) => {
-      if (searchItem) {
-        res
-          .status(200)
-          .json(
-            listUtils.sortList(
-              listUtils.formatedList(listUtils.searchInList(list, searchItem))
-            )
-          );
-      } else {
-        res.status(200).json(listUtils.sortList(listUtils.formatedList(list)));
-      }
+      res.status(200).json(list);
     })
     .catch((err) => {
       err.statusCode = 404;
@@ -203,8 +167,16 @@ const searchAndFilter = (req, res, next) => {
 
   taskModel
     .find(query)
+    .sort({ position: 1 })
+    .select({
+      _id: 1,
+      complete: 1,
+      position: 1,
+      date_create: 1,
+      "task.title": 1,
+    })
     .then((result) => {
-      res.status(200).json(listUtils.sortList(listUtils.formatedList(result)));
+      res.status(200).json(result);
     })
     .catch((err) => {
       err.statusCode = 500;
