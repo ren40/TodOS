@@ -26,7 +26,7 @@
               :task="item"
               :selected="item.complete"
               :index="index"
-              :key="item.id"
+              :key="item._id"
               @dragover.prevent
               @delete="deleteTask"
               @changeSelect="selectTask"
@@ -80,7 +80,7 @@ export default {
           .post("/task", newTask)
           .then((res) => {
             this.taskList.push({
-              id: res.data._id,
+              _id: res.data._id,
               task: res.data.task,
               position: res.data.position,
               complete: res.data.complete,
@@ -94,7 +94,7 @@ export default {
       }
     },
     deleteTask(index) {
-      let taskID = this.taskList[index].id;
+      let taskID = this.taskList[index]._id;
       this.$http
         .delete(`/task/${taskID}`)
         .then(() => {
@@ -115,7 +115,7 @@ export default {
         });
     },
     selectTask(index, inSelect) {
-      let taskID = this.taskList[index].id;
+      let taskID = this.taskList[index]._id;
       this.$http
         .patch(`/task/${taskID}`, {
           complete: inSelect,
@@ -146,8 +146,8 @@ export default {
     },
     dragFinish(event, newIndex) {
       let _fromIndex = parseInt(event.dataTransfer.getData("Text"));
-      if (this.taskList[_fromIndex].id != null) {
-        this.updatePositionTask(this.taskList[_fromIndex].id, {
+      if (this.taskList[_fromIndex]._id != null) {
+        this.updatePositionTask(this.taskList[_fromIndex]._id, {
           fromIndex: _fromIndex,
           newPosition: newIndex,
         });
