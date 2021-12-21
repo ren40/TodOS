@@ -23,24 +23,27 @@
               <v-label>Total task: {{ totalTask }}</v-label>
               <v-divider></v-divider>
             </li>
-            <ToDoItem
-              v-for="(item, index) in taskList"
-              :task="item"
-              :selected="item.complete"
-              :index="index"
-              :key="item._id"
-              @dragover.prevent
-              @delete="deleteTask"
-              @changeSelect="selectTask"
-              @dragstart="dragStart"
-              @drop="dragFinish"
-            ></ToDoItem>
-            <li
-              class="todo__list_footer"
-              v-if="taskList.length > $appConfig.service.LIMIT_ELEMENT"
+            <v-virtual-scroll
+              ref="scroll"
+              :items="taskList"
+              :item-height="66"
+              height="600"
+              class="todo_list"
             >
-              <ToDoFooter @deleteAll="deleteAllTask"></ToDoFooter>
-            </li>
+              <template v-slot="{ item, index }">
+                <ToDoItem
+                  :task="item"
+                  :selected="item.complete"
+                  :index="index"
+                  :key="item._id"
+                  @dragover.prevent
+                  @delete="deleteTask"
+                  @changeSelect="selectTask"
+                  @dragstart="dragStart"
+                  @drop="dragFinish"
+                ></ToDoItem>
+              </template>
+            </v-virtual-scroll>
           </ul>
         </v-sheet>
       </v-col>
@@ -50,14 +53,12 @@
 
 <script>
 import ToDoItem from "../components/ToDoItem.vue";
-import ToDoFooter from "../components/ToDoFooter.vue";
 import ToDoHeader from "../components/ToDoHeader.vue";
 
 export default {
   name: "ToDoViews",
   components: {
     ToDoItem,
-    ToDoFooter,
     ToDoHeader,
   },
   data: () => ({
@@ -65,7 +66,7 @@ export default {
     taskList: [],
     lastListSize: 0,
     totalTask: 0,
-    page: 0,
+    page: 1,
     //
   }),
   methods: {
@@ -83,7 +84,7 @@ export default {
         this.$http
           .post("/task", newTask)
           .then((res) => {
-            this.taskList.push({
+            this.taskList.unshift({
               _id: res.data._id,
               task: res.data.task,
               position: res.data.position,
@@ -191,6 +192,8 @@ export default {
       this.$toast.error(msg);
     },
     searchAndFilter(parm) {
+      parm.limit = this.$appConfig.service.LIMIT_ELEMENT;
+      parm.page = this.page;
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
@@ -199,6 +202,35 @@ export default {
         .catch((err) => {
           this.handlerErrorMessage(err.message);
         });
+    },
+    async loadMoreTask() {
+      try {
+        if (
+          this.page <
+          this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
+        ) {
+          this.page++;
+
+          let result = await this.$http.get("/tasks", {
+            params: {
+              limit: this.$appConfig.service.LIMIT_ELEMENT,
+              page: this.page,
+            },
+          });
+          return result.data.tasks;
+        }
+        return [];
+      } catch (err) {
+        this.handlerErrorMessage(err.message);
+      }
+    },
+    async endIntersect(entries, observer, isIntersecting) {
+      if (isIntersecting) {
+        let moreVendors = await this.loadMoreTask();
+        console.log(moreVendors);
+        this.taskList = [...this.taskList, ...moreVendors];
+        this.lastListSize = this.taskList.length;
+      }
     },
   },
   mounted() {
