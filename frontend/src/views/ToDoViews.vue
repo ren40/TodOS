@@ -26,6 +26,7 @@
             <v-virtual-scroll
               ref="scroll"
               :items="taskList"
+              @scroll.native="scrolling"
               :item-height="66"
               height="600"
               class="todo_list"
@@ -224,10 +225,14 @@ export default {
         this.handlerErrorMessage(err.message);
       }
     },
-    async endIntersect(entries, observer, isIntersecting) {
-      if (isIntersecting) {
+    async scrolling(event) {
+      const element = event.currentTarget || event.target;
+      if (
+        element &&
+        element.scrollHeight - element.scrollTop === element.clientHeight &&
+        this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
+      ) {
         let moreVendors = await this.loadMoreTask();
-        console.log(moreVendors);
         this.taskList = [...this.taskList, ...moreVendors];
         this.lastListSize = this.taskList.length;
       }
