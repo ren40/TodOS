@@ -208,15 +208,9 @@ export default {
     },
     scrolling(event) {
       const element = event.currentTarget || event.target;
-      if (
-        element &&
-        element.scrollHeight - element.scrollTop === element.clientHeight &&
-        this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
-      ) {
-        if (
-          this.page <
-          this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
-        ) {
+      const collision = isCollisionScroll(element);
+      if (collision) {
+        if (this.isOutOfRangePage) {
           this.page++;
 
           this.$http
@@ -235,10 +229,22 @@ export default {
             });
         }
       }
+
+      function isCollisionScroll(element) {
+        return (
+          element &&
+          element.scrollHeight - element.scrollTop === element.clientHeight
+        );
+      }
     },
   },
   mounted() {
     this.handlerGetTaskList();
+  },
+  computed: {
+    isOutOfRangePage: function () {
+      return this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT;
+    },
   },
 };
 </script>
