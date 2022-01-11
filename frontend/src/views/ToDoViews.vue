@@ -28,7 +28,7 @@
               :items="taskList"
               @scroll.native="scrolling"
               :item-height="66"
-              height="600"
+              :height="300"
               class="todo_list"
             >
               <template v-slot="{ item, index }">
@@ -92,6 +92,7 @@ export default {
               complete: res.data.complete,
               date_create: res.data.date_create,
             });
+            this.totalTask++;
           })
           .catch((err) => {
             this.handlerErrorMessage(err.message);
@@ -105,6 +106,7 @@ export default {
         .delete(`/task/${taskID}`)
         .then(() => {
           this.taskList.splice(index, 1);
+          this.totalTask--;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
@@ -204,37 +206,34 @@ export default {
           this.handlerErrorMessage(err.message);
         });
     },
-    async loadMoreTask() {
-      try {
-        if (
-          this.page <
-          this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
-        ) {
-          this.page++;
-
-          let result = await this.$http.get("/tasks", {
-            params: {
-              limit: this.$appConfig.service.LIMIT_ELEMENT,
-              page: this.page,
-            },
-          });
-          return result.data.tasks;
-        }
-        return [];
-      } catch (err) {
-        this.handlerErrorMessage(err.message);
-      }
-    },
-    async scrolling(event) {
+    scrolling(event) {
       const element = event.currentTarget || event.target;
       if (
         element &&
         element.scrollHeight - element.scrollTop === element.clientHeight &&
         this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
       ) {
-        let moreVendors = await this.loadMoreTask();
-        this.taskList = [...this.taskList, ...moreVendors];
-        this.lastListSize = this.taskList.length;
+        if (
+          this.page <
+          this.totalTask / this.$appConfig.service.LIMIT_ELEMENT
+        ) {
+          this.page++;
+
+          this.$http
+            .get("/tasks", {
+              params: {
+                limit: this.$appConfig.service.LIMIT_ELEMENT,
+                page: this.page,
+              },
+            })
+            .then((result) => {
+              this.taskList = [...this.taskList, ...result.data.tasks];
+              this.lastListSize = this.taskList.length;
+            })
+            .catch((err) => {
+              this.handlerErrorMessage(err.message);
+            });
+        }
       }
     },
   },
@@ -250,5 +249,8 @@ h1 {
 }
 ul {
   list-style: none;
+}
+.todo_list {
+  overflow: scroll !important;
 }
 </style>
