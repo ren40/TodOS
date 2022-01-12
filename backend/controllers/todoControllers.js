@@ -8,7 +8,7 @@ const getAllTask = (req, res, next) => {
 
   taskModel
     .find()
-    .sort({ date_create: -1 })
+    .sort({ position: -1 })
     .limit(limitItems)
     .skip(skips)
     .select({

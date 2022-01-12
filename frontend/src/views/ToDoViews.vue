@@ -77,13 +77,14 @@ export default {
   methods: {
     addTask() {
       let item = this.task;
+      let position = this.totalTask++;
       if (item != "") {
         let newTask = {
           task: {
             title: item,
           },
           complete: false,
-          position: Number(this.taskList.length),
+          position: position,
         };
 
         this.$http
@@ -160,8 +161,8 @@ export default {
       let _fromIndex = parseInt(event.dataTransfer.getData("Text"));
       if (this.taskList[_fromIndex]._id != null) {
         this.updatePositionTask(this.taskList[_fromIndex]._id, {
-          fromIndex: _fromIndex,
-          newPosition: newIndex,
+          fromIndex: this.taskList[_fromIndex].position,
+          newPosition: this.taskList[newIndex].position,
         });
 
         this.taskList[newIndex] = this.taskList.splice(
