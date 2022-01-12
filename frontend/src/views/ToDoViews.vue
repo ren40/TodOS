@@ -208,38 +208,55 @@ export default {
     },
     scrolling(event) {
       const element = event.currentTarget || event.target;
-      const collision = isCollisionScroll(element);
-      if (collision) {
-        if (this.isOutOfRangePage) {
-          this.page++;
-
-          this.$http
-            .get("/tasks", {
-              params: {
-                limit: this.$appConfig.service.LIMIT_ELEMENT,
-                page: this.page,
-              },
-            })
-            .then((result) => {
-              this.taskList = [...this.taskList, ...result.data.tasks];
-              this.lastListSize = this.taskList.length;
-            })
-            .catch((err) => {
-              this.handlerErrorMessage(err.message);
-            });
-        }
+      const collision = this.isCollisionScrollElement(element);
+      if (collision && this.isOutOfRangePage) {
+        this.page++;
+        this.loadMoreTasks();
       }
-
-      function isCollisionScroll(element) {
-        return (
-          element &&
-          element.scrollHeight - element.scrollTop === element.clientHeight
+    },
+    isCollisionScrollElement(element) {
+      return (
+        element &&
+        element.scrollHeight - element.scrollTop === element.clientHeight
+      );
+    },
+    loadTaskSmallLimit() {
+      window.onscroll = () => {
+        let currentScroll = Math.round(
+          document.documentElement.scrollTop +
+            document.documentElement.clientHeight
         );
-      }
+        let isCollisionWindow =
+          currentScroll === document.documentElement.offsetHeight;
+
+        if (isCollisionWindow && this.taskList.length < 5) {
+          if (this.isOutOfRangePage) {
+            this.page++;
+            this.loadMoreTasks();
+          }
+        }
+      };
+    },
+    loadMoreTasks() {
+      this.$http
+        .get("/tasks", {
+          params: {
+            limit: this.$appConfig.service.LIMIT_ELEMENT,
+            page: this.page,
+          },
+        })
+        .then((result) => {
+          this.taskList = [...this.taskList, ...result.data.tasks];
+          this.lastListSize = this.taskList.length;
+        })
+        .catch((err) => {
+          this.handlerErrorMessage(err.message);
+        });
     },
   },
   mounted() {
     this.handlerGetTaskList();
+    this.loadTaskSmallLimit();
   },
   computed: {
     isOutOfRangePage: function () {
