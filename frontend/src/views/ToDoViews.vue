@@ -68,6 +68,10 @@ export default {
     lastListSize: 0,
     totalTask: 0,
     page: 1,
+    queryParm: {},
+    pageMutationLists: 1,
+    totalMutationLists: 0,
+    isFindOrFilter: false,
     //
   }),
   methods: {
@@ -188,7 +192,11 @@ export default {
     },
     returnLastList() {
       if (this.lastListSize != this.taskList.length) {
+        this.page = 1;
+        this.pageMutationLists = 1;
+        this.totalMutationLists = 0;
         this.handlerGetTaskList();
+        this.isFindOrFilter = false;
       }
     },
     handlerErrorMessage(msg) {
@@ -196,22 +204,41 @@ export default {
     },
     searchAndFilter(parm) {
       parm.limit = this.$appConfig.service.LIMIT_ELEMENT;
-      parm.page = this.page;
-      this.$http
-        .patch("/task", null, { params: parm })
-        .then((res) => {
-          this.taskList = res.data;
-        })
-        .catch((err) => {
-          this.handlerErrorMessage(err.message);
-        });
+      let isNewQuery =
+        Object.keys(this.queryParm).length - 1 === Object.keys(parm).length;
+      let isNewDate =
+        this.queryParm.date_from != parm.date_from ||
+        this.queryParm.date_to != parm.date_to;
+
+      this.queryParm = parm;
+      if (isNewQuery && !isNewDate) {
+        this.sendQuery();
+      } else {
+        this.pageMutationLists = 1;
+        this.totalMutationLists = 0;
+        this.sendQuery();
+      }
+    },
+    sendQuery() {
+      this.queryParm.page = this.pageMutationLists;
+      if (this.totalMutationLists === 0) {
+        this.getMutationTasks(this.queryParm);
+      } else if (this.isOutOfRangePageMutationList) {
+        this.pageMutationLists++;
+        this.loadMoreMutationTasks(this.queryParm);
+      }
+      this.isFindOrFilter = true;
     },
     scrolling(event) {
       const element = event.currentTarget || event.target;
       const collision = this.isCollisionScrollElement(element);
-      if (collision && this.isOutOfRangePage) {
-        this.page++;
-        this.loadMoreTasks();
+      if (collision) {
+        if (!this.isFindOrFilter && this.isOutOfRangePage) {
+          this.page++;
+          this.loadMoreTasks();
+        } else if (this.isFindOrFilter) {
+          this.sendQuery();
+        }
       }
     },
     isCollisionScrollElement(element) {
@@ -228,11 +255,14 @@ export default {
         );
         let isCollisionWindow =
           currentScroll === document.documentElement.offsetHeight;
-
         if (isCollisionWindow && this.taskList.length < 5) {
-          if (this.isOutOfRangePage) {
-            this.page++;
-            this.loadMoreTasks();
+          if (!this.isFindOrFilter) {
+            if (this.isOutOfRangePage) {
+              this.page++;
+              this.loadMoreTasks();
+            }
+          } else {
+            this.sendQuery();
           }
         }
       };
@@ -253,6 +283,28 @@ export default {
           this.handlerErrorMessage(err.message);
         });
     },
+    loadMoreMutationTasks(parm) {
+      this.$http
+        .patch("/task", null, { params: parm })
+        .then((res) => {
+          this.taskList = [...this.taskList, ...res.data.tasks];
+        })
+        .catch((err) => {
+          this.handlerErrorMessage(err.message);
+        });
+    },
+    getMutationTasks(parm) {
+      this.$http
+        .patch("/task", null, { params: parm })
+        .then((res) => {
+          this.taskList = res.data.tasks;
+          this.totalMutationLists = res.data.totalElement;
+          this.pageMutationLists++;
+        })
+        .catch((err) => {
+          this.handlerErrorMessage(err.message);
+        });
+    },
   },
   mounted() {
     this.handlerGetTaskList();
@@ -261,6 +313,12 @@ export default {
   computed: {
     isOutOfRangePage: function () {
       return this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT;
+    },
+    isOutOfRangePageMutationList: function () {
+      return (
+        this.pageMutationLists <=
+        this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
+      );
     },
   },
 };

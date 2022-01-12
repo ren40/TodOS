@@ -163,6 +163,7 @@ const searchAndFilter = (req, res, next) => {
   const page = parseInt(req.query.page) || 0;
   const limitItems = parseInt(req.query.limit) || 10;
   const skips = (page - 1) * limitItems;
+  let response = {};
 
   if (req.query && req.query.filter) {
     date_from = new Date(req.query.date_from);
@@ -192,7 +193,12 @@ const searchAndFilter = (req, res, next) => {
       "task.title": 1,
     })
     .then((result) => {
-      res.status(200).json(result);
+      response["tasks"] = result;
+      return taskModel.countDocuments(query);
+    })
+    .then((result) => {
+      response["totalElement"] = result;
+      res.status(200).json(response);
     })
     .catch((err) => {
       err.statusCode = 500;
