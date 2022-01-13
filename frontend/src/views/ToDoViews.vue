@@ -225,7 +225,6 @@ export default {
       if (this.totalMutationLists === 0) {
         this.getMutationTasks(this.queryParm);
       } else if (this.isOutOfRangePageMutationList) {
-        this.pageMutationLists++;
         this.loadMoreMutationTasks(this.queryParm);
       }
       this.isFindOrFilter = true;
@@ -289,6 +288,7 @@ export default {
         .patch("/task", null, { params: parm })
         .then((res) => {
           this.taskList = [...this.taskList, ...res.data.tasks];
+          this.pageMutationLists++;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
@@ -298,9 +298,9 @@ export default {
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
+          this.pageMutationLists++;
           this.taskList = res.data.tasks;
           this.totalMutationLists = res.data.totalElement;
-          this.pageMutationLists++;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
