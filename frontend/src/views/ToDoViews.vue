@@ -23,8 +23,16 @@
               <v-label>Total task: {{ totalTask }}</v-label>
               <v-divider></v-divider>
             </li>
+            <v-progress-circular
+              v-if="!isLoad"
+              indeterminate
+              :size="100"
+              :width="10"
+              color="red"
+            ></v-progress-circular>
             <v-virtual-scroll
               ref="scroll"
+              :key="scrollKey"
               :items="taskList"
               @scroll.native="scrolling"
               :item-height="66"
@@ -45,6 +53,13 @@
                 ></ToDoItem>
               </template>
             </v-virtual-scroll>
+            <li
+              v-if="$appConfig.service.LIMIT_ELEMENT < 5 && taskList.length < 5"
+              class="d-flex justify-center"
+              @click="loadTaskSmallLimit"
+            >
+              <v-btn text :disabled="isDisabled"> Download more </v-btn>
+            </li>
           </ul>
         </v-sheet>
       </v-col>
@@ -72,6 +87,8 @@ export default {
     pageMutationLists: 1,
     totalMutationLists: 0,
     isFindOrFilter: false,
+    load: false,
+    scrollKey: 0,
     //
   }),
   methods: {
@@ -175,6 +192,7 @@ export default {
       event.dataTransfer.clearData();
     },
     handlerGetTaskList() {
+      this.load = false;
       this.$http
         .get("/tasks", {
           params: {
@@ -186,18 +204,24 @@ export default {
           this.taskList = res.data.tasks;
           this.totalTask = res.data.totalElement;
           this.lastListSize = this.taskList.length;
+          this.load = true;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
+        })
+        .finally(() => {
+          this.load = true;
         });
     },
     returnLastList() {
-      if (this.lastListSize != this.taskList.length) {
+      if (this.lastListSize != this.taskList.length || this.isFindOrFilter) {
+        this.queryParm = {};
         this.page = 1;
         this.pageMutationLists = 1;
         this.totalMutationLists = 0;
         this.handlerGetTaskList();
         this.isFindOrFilter = false;
+        this.forceRerenderScroll();
       }
     },
     handlerErrorMessage(msg) {
@@ -205,20 +229,45 @@ export default {
     },
     searchAndFilter(parm) {
       parm.limit = this.$appConfig.service.LIMIT_ELEMENT;
-      let isNewQuery =
+
+      let isOldQuery =
         Object.keys(this.queryParm).length - 1 === Object.keys(parm).length;
-      let isNewDate =
-        this.queryParm.date_from != parm.date_from ||
-        this.queryParm.date_to != parm.date_to;
+
+      let isOldDate =
+        this.queryParm.date_from && this.queryParm.date_to
+          ? this.queryParm.date_from === parm.date_from &&
+            this.queryParm.date_to === parm.date_to
+          : false;
+
+      let isOldSearchItem =
+        this.queryParm.searchItem && !parm.searchItem
+          ? this.queryParm.searchItem === parm.searchItem
+          : false;
+
+      let isOverloadedList = this.totalTask === this.taskList.length;
 
       this.queryParm = parm;
-      if (isNewQuery && !isNewDate) {
-        this.sendQuery();
-      } else {
-        this.pageMutationLists = 1;
-        this.totalMutationLists = 0;
-        this.sendQuery();
+
+      if (isOverloadedList) {
+        this.forceRerenderScroll();
       }
+
+      if (isOldQuery) {
+        if (isOldDate && isOldSearchItem) {
+          this.sendQuery();
+        } else if (isOldSearchItem) {
+          this.sendQuery();
+        } else {
+          this.newQuery();
+        }
+      } else {
+        this.newQuery();
+      }
+    },
+    newQuery() {
+      this.pageMutationLists = 1;
+      this.totalMutationLists = 0;
+      this.sendQuery();
     },
     sendQuery() {
       this.queryParm.page = this.pageMutationLists;
@@ -242,32 +291,21 @@ export default {
       }
     },
     isCollisionScrollElement(element) {
-      return (
-        element &&
-        element.scrollHeight - element.scrollTop === element.clientHeight
-      );
+      let bottom = element.scrollHeight - Math.round(element.scrollTop);
+      return element && bottom === element.clientHeight;
     },
     loadTaskSmallLimit() {
-      window.onscroll = () => {
-        let currentScroll = Math.round(
-          document.documentElement.scrollTop +
-            document.documentElement.clientHeight
-        );
-        let isCollisionWindow =
-          currentScroll === document.documentElement.offsetHeight;
-        if (isCollisionWindow && this.taskList.length < 5) {
-          if (!this.isFindOrFilter) {
-            if (this.isOutOfRangePage) {
-              this.page++;
-              this.loadMoreTasks();
-            }
-          } else {
-            this.sendQuery();
-          }
+      if (!this.isFindOrFilter) {
+        if (this.isOutOfRangePage) {
+          this.page++;
+          this.loadMoreTasks();
         }
-      };
+      } else {
+        this.sendQuery();
+      }
     },
     loadMoreTasks() {
+      this.load = false;
       this.$http
         .get("/tasks", {
           params: {
@@ -278,33 +316,50 @@ export default {
         .then((result) => {
           this.taskList = [...this.taskList, ...result.data.tasks];
           this.lastListSize = this.taskList.length;
+          this.load = true;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
+        })
+        .finally(() => {
+          this.load = true;
         });
     },
     loadMoreMutationTasks(parm) {
+      this.load = false;
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
           this.taskList = [...this.taskList, ...res.data.tasks];
           this.pageMutationLists++;
+          this.load = true;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
+        })
+        .finally(() => {
+          this.load = true;
         });
     },
     getMutationTasks(parm) {
+      this.load = false;
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
           this.pageMutationLists++;
           this.taskList = res.data.tasks;
           this.totalMutationLists = res.data.totalElement;
+          this.load = true;
         })
         .catch((err) => {
           this.handlerErrorMessage(err.message);
+        })
+        .finally(() => {
+          this.load = true;
         });
+    },
+    forceRerenderScroll() {
+      this.scrollKey += 1;
     },
   },
   mounted() {
@@ -317,9 +372,19 @@ export default {
     },
     isOutOfRangePageMutationList: function () {
       return (
-        this.pageMutationLists <=
+        this.pageMutationLists <
         this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
       );
+    },
+    isLoad: function () {
+      return this.load;
+    },
+    isDisabled: function () {
+      // return this.totalMutationLists
+      if (this.isFindOrFilter) {
+        return this.totalMutationLists === this.taskList.length;
+      }
+      return this.totalTask === this.taskList.length;
     },
   },
 };
@@ -332,7 +397,12 @@ h1 {
 ul {
   list-style: none;
 }
-.todo_list {
-  overflow: scroll !important;
+.v-progress-circular {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
+/* .todo_list {
+  overflow-y: scroll !important;
+} */
 </style>
