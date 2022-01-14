@@ -94,14 +94,14 @@ export default {
   methods: {
     addTask() {
       let item = this.task;
-      let position = this.totalTask++;
+      let position = this.totalTask;
       if (item != "") {
         let newTask = {
           task: {
             title: item,
           },
           complete: false,
-          position: position,
+          position: ++position,
         };
 
         this.$http
