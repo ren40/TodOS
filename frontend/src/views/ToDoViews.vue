@@ -20,7 +20,7 @@
                 @searchAndFilter="searchAndFilter"
                 @returnList="returnLastList"
               />
-              <v-label>Total task: {{ totalTask }}</v-label>
+              <v-label>Total task: {{ getTotal }}</v-label>
               <v-divider></v-divider>
             </li>
             <v-progress-circular
@@ -286,6 +286,7 @@ export default {
           this.page++;
           this.loadMoreTasks();
         } else if (this.isFindOrFilter) {
+          this.pageMutationLists++;
           this.sendQuery();
         }
       }
@@ -301,6 +302,7 @@ export default {
           this.loadMoreTasks();
         }
       } else {
+        this.pageMutationLists++;
         this.sendQuery();
       }
     },
@@ -331,7 +333,6 @@ export default {
         .patch("/task", null, { params: parm })
         .then((res) => {
           this.taskList = [...this.taskList, ...res.data.tasks];
-          this.pageMutationLists++;
           this.load = true;
         })
         .catch((err) => {
@@ -346,7 +347,6 @@ export default {
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
-          this.pageMutationLists++;
           this.taskList = res.data.tasks;
           this.totalMutationLists = res.data.totalElement;
           this.load = true;
@@ -368,12 +368,17 @@ export default {
   },
   computed: {
     isOutOfRangePage: function () {
-      return this.page < this.totalTask / this.$appConfig.service.LIMIT_ELEMENT;
+      return (
+        this.page <=
+        Math.round(this.totalTask / this.$appConfig.service.LIMIT_ELEMENT)
+      );
     },
     isOutOfRangePageMutationList: function () {
       return (
-        this.pageMutationLists <
-        this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
+        this.pageMutationLists <=
+        Math.round(
+          this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
+        )
       );
     },
     isLoad: function () {
@@ -385,6 +390,9 @@ export default {
         return this.totalMutationLists === this.taskList.length;
       }
       return this.totalTask === this.taskList.length;
+    },
+    getTotal() {
+      return this.isFindOrFilter ? this.totalMutationLists : this.totalTask;
     },
   },
 };

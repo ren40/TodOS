@@ -4,26 +4,22 @@ const getAllTask = (req, res, next) => {
   const page = parseInt(req.query.page) || 0;
   const limitItems = parseInt(req.query.limit) || 10;
   const skips = (page - 1) * limitItems;
+  let totalTasks = 0;
   let response = {};
 
   taskModel
-    .find()
-    .sort({ position: -1 })
-    .limit(limitItems)
-    .skip(skips)
-    .select({
-      _id: 1,
-      complete: 1,
-      position: 1,
-      date_create: 1,
-      "task.title": 1,
-    })
-    .then((list) => {
-      response["tasks"] = list;
-      return taskModel.countDocuments({});
+    .countDocuments({})
+    .then((numTasks) => {
+      totalTasks = numTasks;
+      return taskModel
+        .find()
+        .skip(skips)
+        .limit(limitItems)
+        .sort({ position: -1 });
     })
     .then((result) => {
-      response["totalElement"] = result;
+      response["tasks"] = result;
+      response["totalElement"] = totalTasks;
       res.status(200).json(response);
     })
     .catch((err) => {
@@ -160,6 +156,7 @@ const searchAndFilter = (req, res, next) => {
   let query = {};
   let date_from = null;
   let date_to = null;
+  let totalitems = 0;
   const page = parseInt(req.query.page) || 0;
   const limitItems = parseInt(req.query.limit) || 10;
   const skips = (page - 1) * limitItems;
@@ -179,25 +176,17 @@ const searchAndFilter = (req, res, next) => {
   if (req.query && req.query.search) {
     query["task.title"] = { $regex: req.query.searchItem };
   }
-
   taskModel
-    .find(query)
-    .sort({ position: 1 })
-    .limit(limitItems)
-    .skip(skips)
-    .select({
-      _id: 1,
-      complete: 1,
-      position: 1,
-      date_create: 1,
-      "task.title": 1,
+    .countDocuments(query)
+    .then((numTodos) => {
+      totalitems = numTodos;
+      return taskModel.find(query).skip(skips).limit(limitItems).sort({
+        position: -1,
+      });
     })
     .then((result) => {
       response["tasks"] = result;
-      return taskModel.countDocuments(query);
-    })
-    .then((result) => {
-      response["totalElement"] = result;
+      response["totalElement"] = totalitems;
       res.status(200).json(response);
     })
     .catch((err) => {
