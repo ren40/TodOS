@@ -182,6 +182,7 @@ const searchAndFilter = (req, res, next) => {
       totalitems = numTodos;
       return taskModel.find(query).skip(skips).limit(limitItems).sort({
         position: -1,
+        _id: -1,
       });
     })
     .then((result) => {
