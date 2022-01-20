@@ -32,14 +32,14 @@ export default {
   }),
   computed: {
     getTitleError() {
-      return `An error of the following type:${String(this.description)
+      return this.description ? `An error of the following type:${String(this.description)
         .split(":")[0]
-        .toString()}`;
+        .toString()}` : '';
     },
     getDescriptionError() {
-      return `Error description: ${String(this.description)
+      return this.description ? `Error description: ${String(this.description)
         .split(":")[1]
-        .toString()}`;
+        .toString()}` : "";
     },
   },
   errorCaptured(err) {
