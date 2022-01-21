@@ -1,18 +1,28 @@
-import { shallowMount, createLocalVue } from "@vue/test-utils";
+import { shallowMount, createLocalVue, mount } from "@vue/test-utils";
 import Vuetify from "vuetify";
 
 import ErrorBoundary from "@/components/ErrorBoundary.vue";
 
+const localVue = createLocalVue();
+
+function addElemWithDataAppToBody() {
+  const app = document.createElement("div");
+  app.setAttribute("data-app", true);
+  document.body.append(app);
+}
+
+addElemWithDataAppToBody();
+
 describe("ErrorBoundary.vue", () => {
   let wrapper;
-  const localVue = createLocalVue();
+  let vuetify;
   beforeEach(() => {
-    localVue.use(Vuetify);
+    vuetify = new Vuetify();
   });
-
   it("Testing the modal dialog with the value error=true", async () => {
-    wrapper = shallowMount(ErrorBoundary, {
+    wrapper = mount(ErrorBoundary, {
       localVue,
+      vuetify,
     });
 
     wrapper.setData({
@@ -21,13 +31,14 @@ describe("ErrorBoundary.vue", () => {
     });
 
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("v-dialog-stub").exists()).toBe(true);
+
+    expect(wrapper.find(".v-dialog__container").exists()).toBe(true);
   });
 
-
   it("Testing the modal dialog with the value error=false", async () => {
-    wrapper = shallowMount(ErrorBoundary, {
+    wrapper = mount(ErrorBoundary, {
       localVue,
+      vuetify,
     });
 
     wrapper.setData({
@@ -36,12 +47,13 @@ describe("ErrorBoundary.vue", () => {
     });
 
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("v-dialog-stub").exists()).toBe(false);
+    expect(wrapper.find("v-dialog__container").exists()).toBe(false);
   });
 
-  it("test btn", async () => {
-    wrapper = shallowMount(ErrorBoundary, {
-      localVue: localVue,
+  it("Testing button rendering", async () => {
+    wrapper = mount(ErrorBoundary, {
+      localVue,
+      vuetify,
     });
 
     wrapper.setData({
@@ -50,10 +62,10 @@ describe("ErrorBoundary.vue", () => {
     });
 
     await wrapper.vm.$nextTick();
-    expect(wrapper.find("v-btn-stub").exists()).toBe(true);
+    expect(wrapper.find(".v-btn").exists()).toBe(true);
   });
 
-  it("test computed method getTitleError", async () => {
+  it("Testing computed method getTitleError", async () => {
     let local = {
       description: "Test:description",
     };
@@ -63,7 +75,7 @@ describe("ErrorBoundary.vue", () => {
     );
   });
 
-  it("test computed method getDescriptionError", () => {
+  it("Testing computed method getDescriptionError", () => {
     let local = {
       description: "Title:Test",
     };
@@ -71,5 +83,26 @@ describe("ErrorBoundary.vue", () => {
     expect(ErrorBoundary.computed.getDescriptionError.call(local)).toBe(
       "Error description: Test"
     );
+  });
+
+  it("Testing by pressing a button", async () => {
+    wrapper = mount(ErrorBoundary, {
+      localVue,
+      vuetify,
+    });
+
+    wrapper.setData({
+      error: true,
+      description: "Test:description",
+    });
+
+    await wrapper.vm.$nextTick();
+
+    const button = wrapper.find(".v-btn");
+    button.trigger("click");
+    
+    await wrapper.vm.$nextTick();
+
+    expect(wrapper.find("v-dialog__container").exists()).toBe(false);
   });
 });
