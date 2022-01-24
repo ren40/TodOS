@@ -56,7 +56,7 @@
             <li
               v-if="$appConfig.service.LIMIT_ELEMENT < 5 && taskList.length < 5"
               class="d-flex justify-center"
-              @click="loadTaskSmallLimit"
+              @click="handleUploadTaskOfSmallLimit"
             >
               <v-btn text :disabled="isDisabled"> Download more </v-btn>
             </li>
@@ -84,12 +84,11 @@ export default {
     totalTask: 0,
     page: 1,
     queryParm: {},
-    pageMutationLists: 1,
-    totalMutationLists: 0,
+    pageModifiedList: 1,
+    totalModifiedList: 0,
     isFindOrFilter: false,
     load: false,
     scrollKey: 0,
-    //
   }),
   methods: {
     addTask() {
@@ -117,7 +116,7 @@ export default {
             this.totalTask++;
           })
           .catch((err) => {
-            this.handlerErrorMessage(err.message);
+            this.handleErrorMessage(err.message);
           });
         this.task = "";
       }
@@ -131,17 +130,17 @@ export default {
           this.totalTask--;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         });
     },
     deleteAllTask() {
       this.$http
         .delete(`/tasks`)
         .then(() => {
-          this.handlerGetTaskList();
+          this.handleGetTaskList();
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         });
     },
     selectTask(index, inSelect) {
@@ -154,7 +153,7 @@ export default {
           this.taskList[index].complete = inSelect;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         });
     },
     updatePositionTask(id, position) {
@@ -166,7 +165,7 @@ export default {
         })
         .then(() => {})
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         });
     },
     dragStart(event, index) {
@@ -191,7 +190,7 @@ export default {
 
       event.dataTransfer.clearData();
     },
-    handlerGetTaskList() {
+    handleGetTaskList() {
       this.load = false;
       this.$http
         .get("/tasks", {
@@ -207,7 +206,7 @@ export default {
           this.load = true;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         })
         .finally(() => {
           this.load = true;
@@ -217,14 +216,14 @@ export default {
       if (this.lastListSize != this.taskList.length || this.isFindOrFilter) {
         this.queryParm = {};
         this.page = 1;
-        this.pageMutationLists = 1;
-        this.totalMutationLists = 0;
-        this.handlerGetTaskList();
+        this.pageModifiedList = 1;
+        this.totalModifiedList = 0;
+        this.handleGetTaskList();
         this.isFindOrFilter = false;
         this.forceRerenderScroll();
       }
     },
-    handlerErrorMessage(msg) {
+    handleErrorMessage(msg) {
       this.$toast.error(msg);
     },
     searchAndFilter(parm) {
@@ -265,16 +264,16 @@ export default {
       }
     },
     newQuery() {
-      this.pageMutationLists = 1;
-      this.totalMutationLists = 0;
+      this.pageModifiedList = 1;
+      this.totalModifiedList = 0;
       this.sendQuery();
     },
     sendQuery() {
-      this.queryParm.page = this.pageMutationLists;
-      if (this.totalMutationLists === 0) {
-        this.getMutationTasks(this.queryParm);
+      this.queryParm.page = this.pageModifiedList;
+      if (this.totalModifiedList === 0) {
+        this.getModifiedTasks(this.queryParm);
       } else if (this.isOutOfRangePageMutationList) {
-        this.loadMoreMutationTasks(this.queryParm);
+        this.loadMoreModifiedTaskd(this.queryParm);
       }
       this.isFindOrFilter = true;
     },
@@ -286,7 +285,7 @@ export default {
           this.page++;
           this.loadMoreTasks();
         } else if (this.isFindOrFilter) {
-          this.pageMutationLists++;
+          this.pageModifiedList++;
           this.sendQuery();
         }
       }
@@ -295,14 +294,14 @@ export default {
       let bottom = element.scrollHeight - Math.round(element.scrollTop);
       return element && bottom === element.clientHeight;
     },
-    loadTaskSmallLimit() {
+    handleUploadTaskOfSmallLimit() {
       if (!this.isFindOrFilter) {
         if (this.isOutOfRangePage) {
           this.page++;
           this.loadMoreTasks();
         }
       } else {
-        this.pageMutationLists++;
+        this.pageModifiedList++;
         this.sendQuery();
       }
     },
@@ -321,13 +320,13 @@ export default {
           this.load = true;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         })
         .finally(() => {
           this.load = true;
         });
     },
-    loadMoreMutationTasks(parm) {
+    loadMoreModifiedTaskd(parm) {
       this.load = false;
       this.$http
         .patch("/task", null, { params: parm })
@@ -336,23 +335,23 @@ export default {
           this.load = true;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         })
         .finally(() => {
           this.load = true;
         });
     },
-    getMutationTasks(parm) {
+    getModifiedTasks(parm) {
       this.load = false;
       this.$http
         .patch("/task", null, { params: parm })
         .then((res) => {
           this.taskList = res.data.tasks;
-          this.totalMutationLists = res.data.totalElement;
+          this.totalModifiedList = res.data.totalElement;
           this.load = true;
         })
         .catch((err) => {
-          this.handlerErrorMessage(err.message);
+          this.handleErrorMessage(err.message);
         })
         .finally(() => {
           this.load = true;
@@ -376,8 +375,7 @@ export default {
     },
   },
   mounted() {
-    this.handlerGetTaskList();
-    this.loadTaskSmallLimit();
+    this.handleGetTaskList();
   },
   computed: {
     isOutOfRangePage: function () {
@@ -388,9 +386,9 @@ export default {
     },
     isOutOfRangePageMutationList: function () {
       return (
-        this.pageMutationLists <=
+        this.pageModifiedList <=
         Math.ceil(
-          this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
+          this.totalModifiedList / this.$appConfig.service.LIMIT_ELEMENT
         )
       );
     },
@@ -398,14 +396,13 @@ export default {
       return this.load;
     },
     isDisabled: function () {
-      // return this.totalMutationLists
       if (this.isFindOrFilter) {
-        return this.totalMutationLists === this.taskList.length;
+        return this.totalModifiedList === this.taskList.length;
       }
       return this.totalTask === this.taskList.length;
     },
     getTotal() {
-      return this.isFindOrFilter ? this.totalMutationLists : this.totalTask;
+      return this.isFindOrFilter ? this.totalModifiedList : this.totalTask;
     },
   },
 };
@@ -423,7 +420,4 @@ ul {
   left: 50%;
   transform: translateX(-50%);
 }
-/* .todo_list {
-  overflow-y: scroll !important;
-} */
 </style>
