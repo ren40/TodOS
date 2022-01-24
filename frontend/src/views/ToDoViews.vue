@@ -20,7 +20,7 @@
                 @searchAndFilter="searchAndFilter"
                 @returnList="returnLastList"
               />
-              <v-label>Total task: {{ getTotal }}</v-label>
+              <v-label>Total task: {{ taskList.length }}</v-label>
               <v-divider></v-divider>
             </li>
             <v-progress-circular
@@ -370,13 +370,13 @@ export default {
     isOutOfRangePage: function () {
       return (
         this.page <=
-        Math.round(this.totalTask / this.$appConfig.service.LIMIT_ELEMENT)
+        Math.ceil(this.totalTask / this.$appConfig.service.LIMIT_ELEMENT)
       );
     },
     isOutOfRangePageMutationList: function () {
       return (
         this.pageMutationLists <=
-        Math.round(
+        Math.ceil(
           this.totalMutationLists / this.$appConfig.service.LIMIT_ELEMENT
         )
       );
