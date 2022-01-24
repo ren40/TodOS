@@ -15,7 +15,7 @@ const getAllTask = (req, res, next) => {
         .find()
         .skip(skips)
         .limit(limitItems)
-        .sort({ position: -1, _id: -1 });
+        .sort({ position: -1 });
     })
     .then((result) => {
       response["tasks"] = result;
@@ -182,7 +182,6 @@ const searchAndFilter = (req, res, next) => {
       totalitems = numTodos;
       return taskModel.find(query).skip(skips).limit(limitItems).sort({
         position: -1,
-        _id: -1,
       });
     })
     .then((result) => {

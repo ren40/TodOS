@@ -20,7 +20,7 @@
                 @searchAndFilter="searchAndFilter"
                 @returnList="returnLastList"
               />
-              <v-label>Total task: {{ taskList.length }}</v-label>
+              <v-label>Total downloaded tasks: {{ taskList.length }}</v-label>
               <v-divider></v-divider>
             </li>
             <v-progress-circular
@@ -94,14 +94,14 @@ export default {
   methods: {
     addTask() {
       let item = this.task;
-      let position = this.totalTask;
+      let position = this.getPosition();
       if (item != "") {
         let newTask = {
           task: {
             title: item,
           },
           complete: false,
-          position: ++position,
+          position: position,
         };
 
         this.$http
@@ -360,6 +360,19 @@ export default {
     },
     forceRerenderScroll() {
       this.scrollKey += 1;
+    },
+    getPosition() {
+      return this.task.length + this.getCurrentDay() + this.totalTask;
+    },
+    getCurrentDay() {
+      let day = new Date(Date.now());
+      let year = day.getFullYear();
+      let month = day.getMonth();
+      let dayDate = day.getDate();
+      let hours = day.getHours();
+      let minut = day.getMinutes();
+      let second = day.getSeconds();
+      return year + month + dayDate + hours + minut + second;
     },
   },
   mounted() {
