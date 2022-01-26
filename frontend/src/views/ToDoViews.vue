@@ -89,6 +89,7 @@ export default {
     isFindOrFilter: false,
     load: false,
     scrollKey: 0,
+    deleteCount: 0,
   }),
   methods: {
     addTask() {
@@ -128,6 +129,7 @@ export default {
         .then(() => {
           this.taskList.splice(index, 1);
           this.totalTask--;
+          this.handleRefreshPage();
         })
         .catch((err) => {
           this.handleErrorMessage(err.message);
@@ -361,15 +363,21 @@ export default {
       this.scrollKey += 1;
     },
     getCurrentDay() {
-      let day = new Date(Date.now());
-      let year = day.getFullYear();
-      let month = day.getMonth();
-      let dayDate = day.getDate();
-      let hours = day.getHours();
-      let minut = day.getMinutes();
-      let second = day.getSeconds();
-      let milliSecond = day.getMilliseconds();
-      return year + month + dayDate + hours + minut + second + milliSecond;
+      return parseInt(
+        new Date().valueOf().toString().split("").splice(-7).join("")
+      );
+    },
+    handleRefreshPage() {
+      if (this.isOutOfRangeOfNumbersDeleted) {
+        this.deleteCount++;
+      } else {
+        if (this.isFindOrFilter) {
+          this.pageModifiedList > 1 ? this.pageModifiedList-- : 1;
+        } else {
+          this.page > 1 ? this.page-- : 1;
+        }
+        this.deleteCount = 0;
+      }
     },
   },
   mounted() {
@@ -401,6 +409,9 @@ export default {
     },
     getTotal() {
       return this.isFindOrFilter ? this.totalModifiedList : this.totalTask;
+    },
+    isOutOfRangeOfNumbersDeleted() {
+      return this.deleteCount < this.$appConfig.service.LIMIT_ELEMENT - 1;
     },
   },
 };
