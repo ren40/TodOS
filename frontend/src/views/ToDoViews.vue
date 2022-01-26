@@ -115,6 +115,9 @@ export default {
               date_create: res.data.date_create,
             });
             this.totalTask++;
+            if (this.isOutOfRangePageAddedList) {
+              this.page++;
+            }
           })
           .catch((err) => {
             this.handleErrorMessage(err.message);
@@ -363,9 +366,7 @@ export default {
       this.scrollKey += 1;
     },
     getCurrentDay() {
-      return parseInt(
-        new Date().valueOf().toString().split("").splice(-7).join("")
-      );
+      return parseInt(new Date().valueOf().toString().split("").join(""));
     },
     handleRefreshPage() {
       if (this.isOutOfRangeOfNumbersDeleted) {
@@ -412,6 +413,12 @@ export default {
     },
     isOutOfRangeOfNumbersDeleted() {
       return this.deleteCount < this.$appConfig.service.LIMIT_ELEMENT - 1;
+    },
+    isOutOfRangePageAddedList() {
+      return (
+        this.page * parseInt(this.$appConfig.service.LIMIT_ELEMENT) <
+        this.taskList.length
+      );
     },
   },
 };

@@ -303,4 +303,42 @@ describe("ToDoViews", () => {
       done();
     });
   });
+
+  it("Testing the rendering of the ToDoViews component with the LIMIT_ELEMENT = 1 configuration", async (done) => {
+    $appConfig.service.LIMIT_ELEMENT = 1;
+
+    wrapper = mount(ToDoViews, {
+      localVue,
+      vuetify,
+      mocks: {
+        $appConfig,
+        $http,
+        $toast,
+      },
+    });
+
+    await wrapper.vm.$nextTick();
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.html()).toMatchSnapshot();
+      done();
+    });
+  });
+
+  it("Testing the isOutOfRangePageAddedList method", async (done) => {
+    $appConfig.service.LIMIT_ELEMENT = 1;
+    wrapper = mount(ToDoViews, {
+      localVue,
+      vuetify,
+      mocks: {
+        $appConfig,
+        $http,
+        $toast,
+      },
+    });
+    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.isOutOfRangePageAddedList).toBe(true);
+      done();
+    });
+  });
 });
