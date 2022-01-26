@@ -93,7 +93,7 @@ export default {
   methods: {
     addTask() {
       let item = this.task;
-      let position = this.getPosition();
+      let position = this.getCurrentDay();
       if (item != "") {
         let newTask = {
           task: {
@@ -360,9 +360,6 @@ export default {
     forceRerenderScroll() {
       this.scrollKey += 1;
     },
-    getPosition() {
-      return this.task.length + this.getCurrentDay() + this.totalTask;
-    },
     getCurrentDay() {
       let day = new Date(Date.now());
       let year = day.getFullYear();
@@ -371,7 +368,8 @@ export default {
       let hours = day.getHours();
       let minut = day.getMinutes();
       let second = day.getSeconds();
-      return year + month + dayDate + hours + minut + second;
+      let milliSecond = day.getMilliseconds();
+      return year + month + dayDate + hours + minut + second + milliSecond;
     },
   },
   mounted() {
