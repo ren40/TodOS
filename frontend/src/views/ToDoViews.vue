@@ -5,7 +5,7 @@
       <v-col>
         <v-sheet elevation="1" rounded>
           <v-form class="d-flex justify-space-between align-center px-2 mt-0">
-            <v-text-field class="mt-0" v-model="task" required> </v-text-field>
+            <v-text-field class="mt-0" v-model="task" required @keydown.enter.prevent="addTask"> </v-text-field>
             <v-btn text @click="addTask"> + ADD </v-btn>
           </v-form>
         </v-sheet>

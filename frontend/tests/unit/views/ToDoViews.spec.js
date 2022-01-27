@@ -21,7 +21,7 @@ const $http = http;
 describe("ToDoViews", () => {
   let wrapper;
   let vuetify;
-  
+
   beforeEach(() => {
     vuetify = new Vuetify();
   });
@@ -343,4 +343,24 @@ describe("ToDoViews", () => {
     });
   });
 
+  it("Testing the input component at the keydown.enter event", async (done) => {
+    wrapper = mount(ToDoViews, {
+      localVue,
+      vuetify,
+      mocks: {
+        $appConfig,
+        $http,
+        $toast,
+      },
+    });
+
+    let input = wrapper.find("input");
+    await input.setValue("Test");
+    await input.trigger("keydown.enter");
+
+    wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.taskList[0].task.title).toBe("Test");
+      done();
+    });
+  });
 });
