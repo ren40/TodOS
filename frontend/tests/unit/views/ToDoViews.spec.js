@@ -380,4 +380,28 @@ describe("ToDoViews", () => {
       done();
     });
   });
+
+  it("Testing the returnLastList method", async (done) => {
+    wrapper = mount(ToDoViews, {
+      localVue,
+      vuetify,
+      mocks: {
+        $appConfig,
+        $http,
+        $toast,
+      },
+    });
+
+    wrapper.setData({
+      lastListSize: 1,
+      isFindOrFilter: true,
+    });
+
+    await wrapper.vm.returnLastList();
+
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.pageModifiedList).toBe(1);
+      done();
+    });
+  });
 });
