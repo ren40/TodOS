@@ -363,4 +363,21 @@ describe("ToDoViews", () => {
       done();
     });
   });
+
+  it("Testing the getModifiedTasks method", async (done) => {
+    wrapper = mount(ToDoViews, {
+      localVue,
+      vuetify,
+      mocks: {
+        $appConfig,
+        $http,
+        $toast,
+      },
+    });
+    await wrapper.vm.getModifiedTasks();
+    await wrapper.vm.$nextTick(() => {
+      expect(wrapper.vm.taskList[0].task.title).toBe("Test1");
+      done();
+    });
+  });
 });

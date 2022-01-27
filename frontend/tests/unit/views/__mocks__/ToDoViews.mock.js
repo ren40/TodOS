@@ -45,4 +45,31 @@ export default {
       resolve(true);
     });
   },
+  patch: (_url, _body) => {
+    return new Promise((resolve) => {
+      resolve({
+        data: {
+          tasks: [
+            {
+              task: { title: "Test1" },
+              _id: "61eeabd7525267e4bd11d5f5",
+              complete: false,
+              position: 2168,
+              date_create: "2022-01-24T13:38:31.662Z",
+              __v: 0,
+            },
+            {
+              task: { title: "Test1" },
+              _id: "61e1c012d41b256f8a95b479",
+              complete: false,
+              position: 2190,
+              date_create: "2022-01-14T18:25:22.429Z",
+              __v: 0,
+            },
+          ],
+          totalElement: 2,
+        },
+      });
+    });
+  }
 };
