@@ -21,6 +21,7 @@ const $http = http;
 describe("ToDoViews", () => {
   let wrapper;
   let vuetify;
+  
   beforeEach(() => {
     vuetify = new Vuetify();
   });
@@ -341,4 +342,5 @@ describe("ToDoViews", () => {
       done();
     });
   });
+
 });

@@ -373,9 +373,9 @@ export default {
         this.deleteCount++;
       } else {
         if (this.isFindOrFilter) {
-          this.pageModifiedList > 1 ? this.pageModifiedList-- : 1;
+          this.pageModifiedList > 0 ? this.pageModifiedList-- : 1;
         } else {
-          this.page > 1 ? this.page-- : 1;
+          this.page > 0 ? this.page-- : 1;
         }
         this.deleteCount = 0;
       }
