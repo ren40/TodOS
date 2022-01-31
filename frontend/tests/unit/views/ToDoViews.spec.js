@@ -24,9 +24,6 @@ describe("ToDoViews", () => {
 
   beforeEach(() => {
     vuetify = new Vuetify();
-  });
-
-  it("Testing the rendering of the ToDoViews component", async (done) => {
     wrapper = mount(ToDoViews, {
       localVue,
       vuetify,
@@ -36,6 +33,9 @@ describe("ToDoViews", () => {
         $toast,
       },
     });
+  });
+
+  it("Testing the rendering of the ToDoViews component", async (done) => {
     await wrapper.vm.$nextTick();
     wrapper.vm.$nextTick(() => {
       expect(wrapper.html()).toMatchSnapshot();
@@ -44,15 +44,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the handleGetTaskList method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     await wrapper.vm.handleGetTaskList();
 
     wrapper.vm.$nextTick(() => {
@@ -62,16 +53,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the rendering of the add button", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
-
     let button = wrapper.find(".v-btn");
     wrapper.vm.$nextTick(() => {
       expect(button.text().trim()).toBe("+ ADD");
@@ -80,15 +61,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing for clicking the add button", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     wrapper.setData({
       task: "Test",
     });
@@ -101,16 +73,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the input component", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
-
     let input = wrapper.find("input");
     await input.setValue("Test");
     input.trigger("input");
@@ -122,16 +84,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the rendering of a new element after adding", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
-
     wrapper.setData({
       task: "Test",
     });
@@ -146,15 +98,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the deleteTask method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     await wrapper.vm.$nextTick();
     await wrapper.vm.deleteTask(0);
     wrapper.vm.$nextTick(() => {
@@ -164,15 +107,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the isOutOfRangePage method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     await wrapper.vm.$nextTick();
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.isOutOfRangePage).toBe(true);
@@ -181,15 +115,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the isOutOfRangePageMutationList method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     await wrapper.vm.$nextTick();
     wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.isOutOfRangePageMutationList).toBe(false);
@@ -218,15 +143,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the deleteCount value after executing the deleteTask method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     wrapper.setData({
       deleteCount: 4,
     });
@@ -239,15 +155,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the page value after executing the DeleteTask method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     wrapper.setData({
       deleteCount: 4,
       page: 2,
@@ -262,15 +169,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the pageModifiedList value after executing the DeleteTask method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     wrapper.setData({
       deleteCount: 4,
       pageModifiedList: 2,
@@ -286,15 +184,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the isOutOfRangeOfNumbersDeleted method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     wrapper.setData({
       deleteCount: 5,
     });
@@ -344,16 +233,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the input component at the keydown.enter event", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
-
     let input = wrapper.find("input");
     await input.setValue("Test");
     await input.trigger("keydown.enter");
@@ -365,15 +244,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the getModifiedTasks method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
     await wrapper.vm.getModifiedTasks();
     await wrapper.vm.$nextTick(() => {
       expect(wrapper.vm.taskList[0].task.title).toBe("Test1");
@@ -382,16 +252,6 @@ describe("ToDoViews", () => {
   });
 
   it("Testing the returnLastList method", async (done) => {
-    wrapper = mount(ToDoViews, {
-      localVue,
-      vuetify,
-      mocks: {
-        $appConfig,
-        $http,
-        $toast,
-      },
-    });
-
     wrapper.setData({
       lastListSize: 1,
       isFindOrFilter: true,

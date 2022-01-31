@@ -10,7 +10,7 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
           <div class="v-input mt-0 theme--light v-text-field">
             <div class="v-input__control">
               <div class="v-input__slot">
-                <div class="v-text-field__slot"><input required="required" id="input-294" type="text"></div>
+                <div class="v-text-field__slot"><input required="required" id="input-305" type="text"></div>
               </div>
               <div class="v-text-field__details">
                 <div class="v-messages theme--light">
@@ -38,9 +38,9 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                       <div class="v-input todo__filter_check theme--light v-input--selection-controls v-input--checkbox">
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-302" role="checkbox" type="checkbox" value="">
+                            <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-313" role="checkbox" type="checkbox" value="">
                               <div class="v-input--selection-controls__ripple"></div>
-                            </div><label for="input-302" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label"> Activate filter </span></label>
+                            </div><label for="input-313" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label"> Activate filter </span></label>
                           </div>
                           <div class="v-messages theme--light">
                             <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
@@ -55,7 +55,7 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                         </div>
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-307" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">From Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-307" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-318" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">From Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-318" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -75,7 +75,7 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                         </div>
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-312" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">To Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-312" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-323" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">To Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-323" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -104,7 +104,7 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                       <div class="v-input theme--light v-text-field">
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-320" class="v-label theme--light" style="left: 0px; position: absolute;">Title todo</label><input id="input-320" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-331" class="v-label theme--light" style="left: 0px; position: absolute;">Title todo</label><input id="input-331" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -129,9 +129,9 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                     <div class="v-input todo__item__checkbox theme--light v-input--selection-controls v-input--checkbox">
                       <div class="v-input__control">
                         <div class="v-input__slot">
-                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-327" role="checkbox" type="checkbox" value="">
+                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-338" role="checkbox" type="checkbox" value="">
                             <div class="v-input--selection-controls__ripple"></div>
-                          </div><label for="input-327" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">Test
+                          </div><label for="input-338" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">Test
         </span></label>
                         </div>
                         <div class="v-messages theme--light">
@@ -157,9 +157,9 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                     <div class="v-input todo__item__checkbox theme--light v-input--selection-controls v-input--checkbox">
                       <div class="v-input__control">
                         <div class="v-input__slot">
-                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-337" role="checkbox" type="checkbox" value="">
+                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-358" role="checkbox" type="checkbox" value="">
                             <div class="v-input--selection-controls__ripple"></div>
-                          </div><label for="input-337" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">15678
+                          </div><label for="input-358" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">15678
         </span></label>
                         </div>
                         <div class="v-messages theme--light">
@@ -185,9 +185,9 @@ exports[`ToDoViews Testing the rendering of a new element after adding 1`] = `
                     <div class="v-input todo__item__checkbox theme--light v-input--selection-controls v-input--checkbox">
                       <div class="v-input__control">
                         <div class="v-input__slot">
-                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-347" role="checkbox" type="checkbox" value="">
+                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-368" role="checkbox" type="checkbox" value="">
                             <div class="v-input--selection-controls__ripple"></div>
-                          </div><label for="input-347" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">у21у21у122112у
+                          </div><label for="input-368" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">у21у21у122112у
         </span></label>
                         </div>
                         <div class="v-messages theme--light">
@@ -416,7 +416,7 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
           <div class="v-input mt-0 theme--light v-text-field">
             <div class="v-input__control">
               <div class="v-input__slot">
-                <div class="v-text-field__slot"><input required="required" id="input-848" type="text"></div>
+                <div class="v-text-field__slot"><input required="required" id="input-981" type="text"></div>
               </div>
               <div class="v-text-field__details">
                 <div class="v-messages theme--light">
@@ -444,9 +444,9 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                       <div class="v-input todo__filter_check theme--light v-input--selection-controls v-input--checkbox">
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-856" role="checkbox" type="checkbox" value="">
+                            <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-989" role="checkbox" type="checkbox" value="">
                               <div class="v-input--selection-controls__ripple"></div>
-                            </div><label for="input-856" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label"> Activate filter </span></label>
+                            </div><label for="input-989" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label"> Activate filter </span></label>
                           </div>
                           <div class="v-messages theme--light">
                             <transition-group-stub tag="div" name="message-transition" class="v-messages__wrapper"></transition-group-stub>
@@ -461,7 +461,7 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                         </div>
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-861" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">From Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-861" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-994" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">From Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-994" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -481,7 +481,7 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                         </div>
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-866" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">To Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-866" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-999" class="v-label v-label--active v-label--is-disabled theme--light" style="left: 0px; position: absolute;">To Date</label><input role="button" aria-haspopup="true" aria-expanded="false" disabled="disabled" id="input-999" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -510,7 +510,7 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                       <div class="v-input theme--light v-text-field">
                         <div class="v-input__control">
                           <div class="v-input__slot">
-                            <div class="v-text-field__slot"><label for="input-874" class="v-label theme--light" style="left: 0px; position: absolute;">Title todo</label><input id="input-874" type="text"></div>
+                            <div class="v-text-field__slot"><label for="input-1007" class="v-label theme--light" style="left: 0px; position: absolute;">Title todo</label><input id="input-1007" type="text"></div>
                           </div>
                           <div class="v-text-field__details">
                             <div class="v-messages theme--light">
@@ -535,9 +535,9 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                     <div class="v-input todo__item__checkbox theme--light v-input--selection-controls v-input--checkbox">
                       <div class="v-input__control">
                         <div class="v-input__slot">
-                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-896" role="checkbox" type="checkbox" value="">
+                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-1031" role="checkbox" type="checkbox" value="">
                             <div class="v-input--selection-controls__ripple"></div>
-                          </div><label for="input-896" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">15678
+                          </div><label for="input-1031" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">15678
         </span></label>
                         </div>
                         <div class="v-messages theme--light">
@@ -563,9 +563,9 @@ exports[`ToDoViews Testing the rendering of the ToDoViews component with the LIM
                     <div class="v-input todo__item__checkbox theme--light v-input--selection-controls v-input--checkbox">
                       <div class="v-input__control">
                         <div class="v-input__slot">
-                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-906" role="checkbox" type="checkbox" value="">
+                          <div class="v-input--selection-controls__input"><i aria-hidden="true" class="v-icon notranslate mdi mdi-checkbox-blank-outline theme--light"></i><input aria-checked="false" id="input-1041" role="checkbox" type="checkbox" value="">
                             <div class="v-input--selection-controls__ripple"></div>
-                          </div><label for="input-906" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">у21у21у122112у
+                          </div><label for="input-1041" class="v-label theme--light" style="left: 0px; position: relative;"><span class="checkbox__label">у21у21у122112у
         </span></label>
                         </div>
                         <div class="v-messages theme--light">
